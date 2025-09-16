@@ -51,7 +51,7 @@ class ProductTemplate(models.Model):
     image = models.ImageField(upload_to="products/", null=True, blank=True)
 
     is_active = models.BooleanField(default=True)
-    extra_attributes = models.JSONField(default=dict, blank=True)
+    extra_attributes = models.JSONField(default=dict, null=True, blank=True)
 
     def __str__(self):
         return self.name

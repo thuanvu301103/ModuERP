@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',   # Rest framework: go to localhost:8000/api/... to get list of API through UI
     'inventory'
 ]
 

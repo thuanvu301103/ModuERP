@@ -1,1 +1,35 @@
-/venv
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.so
+
+# Virtual env
+venv/
+.env/
+.venv/
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+
+# Media
+/media/
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# Migrations (ignore toàn bộ file trừ __init__.py)
+**/migrations/*
+!**/migrations/__init__.py
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp

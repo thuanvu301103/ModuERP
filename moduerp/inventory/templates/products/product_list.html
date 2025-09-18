@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Products{% endblock %}
 
@@ -7,20 +8,32 @@
     <!-- title -->
     <div name="title" class="fs-5 text-white">Product</div>
     <!-- buttons -->
-    <button type="button" class="btn btn-indigo-5">Add New</button>
+    <div class="d-flex flex-row align-items-center gap-3">
+      <!-- Pagination bar-->
+      <div id="pagination-info" hx-swap-oob="true">
+        {{ meta.current_page }} / {{ meta.num_pages }}
+      </div>
+      <!-- Add New button -->
+      <button type="button" class="btn btn-indigo-5">Add New</button>
+    </div>
 </div>
 {% endblock %}
 
-
 {% block content %}
-<!-- container load bằng htmx -->
 <div 
   id="product-cards"
   hx-get="{% url 'inventory:product_list' %}" 
   hx-trigger="load" 
   hx-target="#product-cards" 
-  hx-swap="innerHTML">
-  Loading...
+  hx-swap="innerHTML"
+  class="flex-grow-1 d-flex flex-column"
+>
+  <!-- Loading indicator -->
+  <div class="d-flex flex-row justify-content-center align-items-center h-100 gap-3">
+    <img src="{% static 'icons/rocket.svg' %}" alt="inventory icon" width="200" height="200">
+    <span class="fs-4 text-white">Loading, please wait...</span>
+    <div class="spinner-border text-indigo-5" role="status" style="width: 2rem; height: 2rem;"></div>
+  </div>
 </div>
 
 <!-- chỗ để show detail -->

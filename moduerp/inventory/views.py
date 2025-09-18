@@ -4,16 +4,36 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
 from .models import ProductTemplate
 
 # Add new products
 
 # Get all products
 def product_list(request):
-    products = ProductTemplate.objects.all()
     if request.htmx:
-        return render(request, "products/_product_cards.html", {"products": products})
-    return render(request, "products/product_list.html", {"products": products})
+        products_qs = ProductTemplate.objects.all().order_by('id')   # Query set
+    
+        # Get pagination parameters from request
+        page = int(request.GET.get("page", 1))
+        page_size = int(request.GET.get("page_size", 25))
+
+        paginator = Paginator(products_qs, page_size)
+        page_obj = paginator.get_page(page)
+
+        context = {
+            "products": page_obj.object_list,
+            "meta": {
+                "total": paginator.count,
+                "num_pages": paginator.num_pages,
+                "current_page": page_obj.number,
+                "has_next": page_obj.has_next(),
+                "has_previous": page_obj.has_previous(),
+            }
+        }
+    
+        return render(request, "products/_product_cards.html", context)
+    return render(request, "products/product_list.html")
 
 def product_detail(request, pk):
     product = get_object_or_404(ProductTemplate, pk=pk)

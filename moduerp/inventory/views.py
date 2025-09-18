@@ -3,6 +3,24 @@ from rest_framework import viewsets # Create CRUD API
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
+from django.shortcuts import render, get_object_or_404
+from .models import ProductTemplate
+
+# Add new products
+
+# Get all products
+def product_list(request):
+    products = ProductTemplate.objects.all()
+    if request.htmx:
+        return render(request, "products/_product_cards.html", {"products": products})
+    return render(request, "products/product_list.html", {"products": products})
+
+def product_detail(request, pk):
+    product = get_object_or_404(ProductTemplate, pk=pk)
+    return render(request, "products/_product_detail.html", {"product": product})
+
+
+# API
 from .models import UnitOfMeasure, ProductCategory, ProductTemplate, ProductVariant
 from .serializers import (
     UnitOfMeasureSerializer,
@@ -10,7 +28,6 @@ from .serializers import (
     ProductTemplateSerializer,
     ProductVariantSerializer,
 )
-
 
 class UnitOfMeasureViewSet(viewsets.ModelViewSet):
     queryset = UnitOfMeasure.objects.all()

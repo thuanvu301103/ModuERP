@@ -1,0 +1,16 @@
+// Import function helpers
+@import "node_modules/bootstrap/scss/functions";
+
+// Import default variables
+@import "node_modules/bootstrap/scss/variables";
+
+// Thêm màu custom
+$custom-colors: (
+  "indigo-5": #3F51B5
+);
+
+// Merge với map sẵn có
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+// Cuối cùng import toàn bộ Bootstrap
+@import "node_modules/bootstrap/scss/bootstrap";

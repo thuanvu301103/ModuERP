@@ -1,10 +1,21 @@
+from django.urls import path, include
 from rest_framework import routers
-from .views import UnitOfMeasureViewSet, ProductCategoryViewSet, ProductTemplateViewSet, ProductVariantViewSet
+from . import views
+
+app_name = "inventory"
 
 router = routers.DefaultRouter()
-router.register(r'uom', UnitOfMeasureViewSet)
-router.register(r'categories', ProductCategoryViewSet)
-router.register(r'products', ProductTemplateViewSet)
-router.register(r'variants', ProductVariantViewSet)
+router.register(r'uom', views.UnitOfMeasureViewSet)
+router.register(r'categories', views.ProductCategoryViewSet)
+router.register(r'products', views.ProductTemplateViewSet)
+router.register(r'variants', views.ProductVariantViewSet)
 
-urlpatterns = router.urls
+# URL patterns
+urlpatterns = [
+    # Django template / htmx views
+    path("products/", views.product_list, name="product_list"),
+    path("products/<int:pk>/", views.product_detail, name="product_detail"),
+
+    # DRF API
+    #path("api/", include(router.urls)),
+]

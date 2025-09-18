@@ -1,0 +1,20 @@
+<div class="row">
+  {% for p in products %}
+  <div class="col-md-3 mb-3">
+    <div class="card h-100" 
+         hx-get="{% url 'inventory:product_detail' p.id %}" 
+         hx-target="#product-detail"
+         hx-swap="innerHTML">
+      {% if p.image %}
+        <img src="{{ p.image.url }}" class="card-img-top" style="height:150px; object-fit:contain;">
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">{{ p.name }}</h5>
+        <p class="card-text">{{ p.list_price }} $</p>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p>No products found.</p>
+  {% endfor %}
+</div>

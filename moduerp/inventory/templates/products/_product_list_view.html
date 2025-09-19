@@ -1,0 +1,23 @@
+{% load static %}
+
+{% if products %}
+
+{% if view_type == "gallery" %}
+{% include "products/_product_list_view_card.html" %}
+{% elif view_type == "list" %}
+{% include "products/_product_list_view_list.html" %}
+{% endif %}
+
+{% include "products/_product_list_toolbar.html" %}
+
+{% else %}
+
+<!-- No found -->
+<div class="d-flex flex-row justify-content-center align-items-center h-100 gap-3">
+  <img src="{% static 'icons/empty_box.svg' %}" alt="inventory icon" width="200" height="200">
+  <span class="fs-4 text-white">No products found</span>
+</div>
+
+{% include "products/_product_list_toolbar.html" %}
+
+{% endif %}

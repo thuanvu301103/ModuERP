@@ -4,27 +4,16 @@
 {% block title %}Products{% endblock %}
 
 {% block toolbar %}
-<div class="d-flex flex-row justify-content-between align-items-center gap-2">
-    <!-- title -->
-    <div name="title" class="fs-5 text-white">Product</div>
-    <!-- buttons -->
-    <div class="d-flex flex-row align-items-center gap-3">
-      <!-- Pagination bar-->
-      <div id="pagination-info" hx-swap-oob="true">
-        __ / __
-      </div>
-      <!-- Add New button -->
-      <button type="button" class="btn btn-indigo-5">Add New</button>
-    </div>
+<div id="production-toolbar" hx-swap-oob="true" class="d-flex flex-row justify-content-between align-items-center gap-2">
 </div>
 {% endblock %}
 
 {% block content %}
 <div 
-  id="product-cards"
+  id="product-list-view"
   hx-get="{% url 'inventory:product_list' %}" 
   hx-trigger="load" 
-  hx-target="#product-cards" 
+  hx-target="#product-list-view" 
   hx-swap="innerHTML"
   class="flex-grow-1 d-flex flex-column"
 >
@@ -36,6 +25,4 @@
   </div>
 </div>
 
-<!-- chỗ để show detail -->
-<div id="product-detail" class="mt-4"></div>
 {% endblock %}

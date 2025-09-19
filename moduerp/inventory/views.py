@@ -12,11 +12,12 @@ from .models import ProductTemplate
 # Get all products
 def product_list(request):
     if request.htmx:
-        products_qs = ProductTemplate.objects.all().order_by('id')   # Query set
+        products_qs = ProductTemplate.objects.filter(is_active=True).order_by('id')   # Query set
     
         # Get pagination parameters from request
         page = int(request.GET.get("page", 1))
-        page_size = int(request.GET.get("page_size", 25))
+        page_size = int(request.GET.get("page_size", 24))
+        view_type = str(request.GET.get("view_type", 'gallery'))
 
         paginator = Paginator(products_qs, page_size)
         page_obj = paginator.get_page(page)
@@ -29,10 +30,12 @@ def product_list(request):
                 "current_page": page_obj.number,
                 "has_next": page_obj.has_next(),
                 "has_previous": page_obj.has_previous(),
+                "next_page_number": page_obj.next_page_number() if page_obj.has_next() else None,
+                "previous_page_number": page_obj.previous_page_number() if page_obj.has_previous() else None,
             }
         }
     
-        return render(request, "products/_product_cards.html", context)
+        return render(request, "products/_product_list_view.html", {"products": context["products"], "meta": context["meta"], "view_type": view_type})
     return render(request, "products/product_list.html")
 
 def product_detail(request, pk):

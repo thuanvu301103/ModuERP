@@ -15,21 +15,23 @@
 <body class="d-flex flex-column min-vh-100 bg-black text-white">
 
     <!-- Header -->
-    <div class="d-flex flex-column bg-dark p-3 gap-2">
+    <div class="d-flex flex-column bg-dark p-3 gap-2 sticky-top">
         <!-- Navigation bar -->
         <nav class="d-flex flex-row align-items-center gap-2">
             <!-- Icon -->
-            <img src="{% static 'icons/inventory.logo.svg' %}" alt="inventory icon" width="30" height="30">
-            <div name="title" class="fs-4 fw-bold text-white">Inventory</div>
+            <img src="{% static 'icons/inventory.logo.svg' %}" alt="inventory icon" height="20">
+            <div name="title" class="fs-5 fw-bold text-white">Inventory</div>
             <!-- Buttons links -->
-            <a href="{% url 'inventory:product_list' %}" class="btn btn-dark">Products</a>
+            <a href="{% url 'inventory:product_list' %}" class="btn btn-dark btn-sm">Products</a>
         </nav>
         <!-- Toolbar -->
         {% block toolbar %}{% endblock %}
+        <!-- Table Header -->
+        {% block tableHeader %}{% endblock %}
     </div>
     
     <!-- Content -->
-    <div class="flex-grow-1 d-flex p-3" id="content">
+    <div class="flex-grow-1 d-flex" id="content">
         {% block content %}{% endblock %}
     </div>
 </body>

@@ -1,6 +1,7 @@
 {% load static %}
 
-<div class="flex-grow-1 row">
+{% if products %}
+<div class="row">
   {% for p in products %}
   <div class="col-md-3 mb-3">
     <!-- Product Card -->
@@ -29,6 +30,25 @@
   {% endfor %}
 </div>
 
-<div id="pagination-info" hx-swap-oob="true">
-  {{ meta.current_page }} / {{ meta.num_pages }}
+<div id="pagination-info" hx-swap-oob="true" class="d-flex flex-row gap-2">
+  <!-- Total -->
+  <div> Total: {{meta.total}} </div>
+  <!-- Navigator -->
+  <div>
+    {{ meta.current_page }} / {{ meta.num_pages }}
+  </div>
 </div>
+
+{% else %}
+
+<!-- No found -->
+<div class="d-flex flex-row justify-content-center align-items-center h-100 gap-3">
+  <img src="{% static 'icons/empty_box.svg' %}" alt="inventory icon" width="200" height="200">
+  <span class="fs-4 text-white">No products found</span>
+</div>
+
+<div id="pagination-info" hx-swap-oob="true">
+  Total: 0
+</div>
+
+{% endif %}

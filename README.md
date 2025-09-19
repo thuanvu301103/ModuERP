@@ -27,3 +27,8 @@ python manage.py migrate
 python manage.py runserver
 ```
 - Default URL: ```http://127.0.0.1:8000/```
+
+## Run seeder
+```bash
+python manage.py seed_inventory
+```

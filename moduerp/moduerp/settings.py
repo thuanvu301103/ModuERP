@@ -68,7 +68,7 @@ ROOT_URLCONF = 'moduerp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"], # global templates folder
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,6 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Login config
+LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/accounts/login/"
+LOGOUT_REDIRECT_URL = "/"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

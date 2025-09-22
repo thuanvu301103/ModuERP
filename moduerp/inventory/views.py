@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 import json
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import ProductTemplate
 
@@ -45,6 +46,7 @@ def apply_domain(queryset, domain):
 
     return queryset.filter(q)
 
+@login_required
 # Get all products
 def product_list(request):
     if request.htmx:

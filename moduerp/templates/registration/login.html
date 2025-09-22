@@ -1,13 +1,9 @@
+{% extends "base.html" %}
 {% load static%}
-{% load sass_tags %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}ModuERP - Login{% endblock %}</title>
-    <link href="{% sass_src 'scss/custom.scss' %}" rel="stylesheet" type="text/css">
-</head>
+{% block title %}ModuERP - Login{% endblock %}
+
+{% block body %}
 <body class="bg-black d-flex justify-content-center align-items-center wh-100 vh-100">
   <!-- Login box-->
   <div class="card border-1 bg-dark p-3" style="width:400px;">
@@ -44,4 +40,4 @@
     </form>
   </div>
 </body>
-</html>
+{% endblock %}

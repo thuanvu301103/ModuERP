@@ -1,102 +1,35 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Products{% endblock %}
+{% block title %}ModuERP - Products{% endblock %}
+
+{% block navbar %}
+{% include "inventory_navbar.html"%}
+{% endblock %}
 
 {% block toolbar %}
-<div id="production-toolbar" class="d-flex flex-row justify-content-between align-items-center gap-2">
-    <!-- title -->
-    <div name="title" class="fs-5 text-white">Product</div>
-    <!-- buttons -->
-    <div class="d-flex flex-row align-items-center gap-3">
-      
-      <!-- Filter -->
-      <div class="d-flex">
-        <!-- Toggle button -->
-        <button type="button" 
-          class="btn btn-outline-cyan-5 btn-sm rounded-start rounded-0" 
-          data-bs-toggle="button" 
-          autocomplete="off"
-          id="filter-btn">
-            Filter
-        </button>
-        <!-- Expand button -->
-        <button type="button" 
-          class="btn btn-light btn-sm rounded-end rounded-0 dropdown-toggle dropdown-toggle-split" 
-          data-bs-toggle="modal" 
-          data-bs-target="#filterModal"
-        >
-            <span class="visually-hidden">Toggle Dropdown</span>
-        </button>
-      </div>
-
-      <!-- Selected -->
-      <div class="text-cyan-5 border border-cyan-5 rounded px-3 py-1 d-inline-block small"> 
-        Selected: <span id="selected-count">0</span> 
-      </div>
-      <div id="pagination-bar" hx-swap-oob="true" class="d-flex gap-3">
-      <!-- view bar -->
-      <div class="btn-group btn-sm" role="group" aria-label="Radio toggle view">
-        <!-- Gallery view -->
-        <input type="radio" class="btn-check" name="options" id="gallery view" autocomplete="off" {% if view_type == "gallery" %}checked{% endif %}>
-        <label 
-          class="btn btn-outline-indigo-5 btn-sm" 
-          for="gallery view"
-          hx-get="{% url 'inventory:product_list' %}?view_type=gallery&pag={{ meta.current_page }}"
-          hx-target="#product-list-view"
-          hx-swap="innerHTML"
-        >
-          <img src="{% static 'icons/gallery.svg' %}" alt="inventory icon" width="15" height="15">
-        </label>
-
-        <!-- List view -->
-        <input type="radio" class="btn-check btn-sm" name="options" id="list view" autocomplete="off" {% if view_type == "list" %}checked{% endif %}>
-        <label 
-          class="btn btn-outline-indigo-5 btn-sm" 
-          for="list view"
-          hx-get="{% url 'inventory:product_list' %}?view_type=list&page={{ meta.current_page }}"
-          hx-target="#product-list-view"
-          hx-swap="innerHTML"
-        >
-          <img src="{% static 'icons/list.svg' %}" alt="inventory icon" width="15" height="15">
-        </label>
-      </div>
-      <!-- Pagination bar-->
-      <div id="pagination-info" hx-swap-oob="true" class="d-flex flex-row align-items-center gap-3">
-        <!-- Total -->
-        <div class="fw-light"> Total: {{meta.total}} </div>
-        <!-- Navigator -->
-        <div class="d-flex flex-row align-items-center gap-1">
-          <button type="button"
-            class="btn btn-indigo-5 btn-sm {% if not meta.has_previous %}disabled{% endif %}"
-            hx-get="{% url 'inventory:product_list' %}?page={{ meta.previous_page_number }}&view_type={{ view_type }}"
-            hx-target="#product-list-view"
-            hx-swap="innerHTML"
-          >
-            <img src="{% static 'icons/prev.svg' %}" alt="next icon" width="10">
-          </button>
-          <button type="button"
-            class="btn btn-indigo-5 btn-sm {% if not meta.has_next %}disabled{% endif %}"
-            hx-get="{% url 'inventory:product_list' %}?page={{ meta.next_page_number }}&view_type={{ view_type }}"
-            hx-target="#product-list-view"
-            hx-swap="innerHTML"
-          >
-            <img src="{% static 'icons/next.svg' %}" alt="next icon" width="10">
-          </button>
-          <div class="fw-light">
-            {{ meta.current_page }} / {{ meta.num_pages }}
-          </div>
-        </div>
-      </div>
-      </div>
-      <!-- Add New button -->
-      <button type="button" class="btn btn-indigo-5 btn-sm">Add New</button>
-    </div>
-</div>
-
+{% include "products/_product_list_toolbar.html"%}
 {% endblock %}
 
 {% block content %}
+<div class="flex-grow-1 overflow-auto w-100" id="product-list-view"></div>
+<script src="{% static 'js/products/load_products_list.js' %}"></script>
+
+<!-- Product card template -->
+<template id="product-card-template">
+  <div class="col-md-3 p-2">
+    <div class="card d-flex flex-row bg-dark text-white">
+      <img class="product-image" alt="product image" style="height:100px; object-fit:contain;">
+      <div class="d-flex flex-column justify-content-between p-2 gap-0">
+        <div class="fs-6 fw-bold product-name"></div>
+        <div class="fs-7 fw-light product-price"></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+{% endblock %}
+
 <div 
   id="product-list-view"
   hx-get="{% url 'inventory:product_list' %}" 
@@ -112,8 +45,6 @@
     <div class="spinner-border text-indigo-5" role="status" style="width: 2rem; height: 2rem;"></div>
   </div>
 </div>
-
-{% endblock %}
 
 {% block model %}
 {% include 'products/_product_list_modal_filter.html'%}

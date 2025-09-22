@@ -1,0 +1,13 @@
+{% extends "layout/navbar.html"%}
+{% load static %}
+
+{% block nav_title%}
+  <div class="d-flex flex-row align-items-center gap-2">
+    <img src="{% static 'icons/inventory.logo.svg' %}" alt="inventory icon" height="20">
+    <div name="title" class="fs-5 fw-bold text-white">Inventory</div>
+  </div>
+{% endblock %}
+
+{% block nav_menu%}
+  <a href="{% url 'inventory:product_list' %}" class="btn btn-dark btn-sm">Products</a>
+{% endblock %}

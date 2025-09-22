@@ -34,5 +34,41 @@
     <div class="flex-grow-1 d-flex" id="content">
         {% block content %}{% endblock %}
     </div>
+
+    <!-- Model -->
+    {% block model %} {%endblock%}
+
+    <!-- Bootstrap JS -->
+    <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+
+    <script>
+        const filterbtn = document.getElementById("filter-btn");
+        const filterContainer = document.getElementById("filter-container");
+
+        filterbtn.addEventListener("click", () => {
+            if (filterbtn.classList.contains("active")) {
+            // 👉 Nút đang ở trạng thái ON
+            let domain = [];
+
+            filterContainer.querySelectorAll(".filter-row").forEach(row => {
+                let field = row.querySelector('[name="field"]').value;
+                let operator = row.querySelector('[name="operator"]').value;
+                let value = row.querySelector('[name="value"]').value;
+
+                if (value) {
+                    domain.push([field, operator, isNaN(value) ? value : Number(value)]);
+                    }
+                });
+
+                // Encode domain to JSON string
+                let params = new URLSearchParams();
+                params.append("domain", JSON.stringify(domain));
+                // Call htmx load product list
+                htmx.ajax('GET', `../products?${params.toString()}`, "#product-list-view");
+            } else {
+                htmx.ajax('GET', `../products`, "#product-list-view");
+            }
+        });
+    </script>
 </body>
 </html>

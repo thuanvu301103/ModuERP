@@ -1,0 +1,123 @@
+{% load static %}
+
+<!-- Modal Filter -->
+<div class="modal fade" id="filterModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80%;">
+    <div class="modal-content bg-dark text-white border-secondary">
+      
+      <!-- Header -->
+      <div class="modal-header border-secondary">
+        <div class="modal-title fs-5 fw-bold">Advance Filter</div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      
+      <!-- Body -->
+      <div class="modal-body">
+        <div id="filter-container">
+        </div>
+
+        <button type="button" class="btn btn-cyan-5 btn-sm mt-2" id="add-filter">
+          Add more filter
+        </button>
+      </div>
+      
+      <!-- Footer -->
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-indigo-5 btn-sm">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Template -->
+<template id="filter-template">
+  <div class="filter-row d-flex gap-2 mb-2">
+    <select name="field" class="form-select field-select bg-dark text-white fw-light border-secondary">
+      <option value="name" data-type="string">Name</option>
+      <option value="default_code" data-type="string">Code</option>
+      <option value="product_type" data-type="string">Type</option>
+      <option value="category" data-type="string">Category</option>
+      <option value="list_type" data-type="number">List Price</option>
+      <option value="standard_type" data-type="number">Standard Price</option>
+    </select>
+    <select name="operator" class="form-select operator-select bg-dark text-white fw-light border-secondary"></select>
+    <input type="text" name="value" class="form-control bg-dark text-white fw-light border-secondary">
+    <button type="button" class="btn btn-pink-5 btn-sm delete-filter">
+      <img src="{% static 'icons/trash.svg' %}" alt="trash" height="20">
+    </button>
+  </div>
+</template>
+
+<!-- Script -->
+<script>
+  const container = document.getElementById("filter-container");
+  const template = document.getElementById("filter-template");
+  const addBtn = document.getElementById("add-filter");
+
+  const operators = {
+    string: [
+      { value: "=", label: "=" },
+      { value: "!=", label: "≠" },
+      { value: "ilike", label: "contains" },
+      { value: "not ilike", label: "not contains" }
+    ],
+    number: [
+      { value: "=", label: "=" },
+      { value: "!=", label: "≠" },
+      { value: ">", label: ">" },
+      { value: "<", label: "<" },
+      { value: ">=", label: "≥" },
+      { value: "<=", label: "≤" }
+    ],
+    choice: [
+      { value: "=", label: "=" },
+      { value: "!=", label: "≠" }
+    ],
+    boolean: [
+      { value: "=", label: "=" }
+    ]
+  };
+
+  // Hàm cập nhật operator cho 1 row
+  function updateOperators(row) {
+    const fieldSelect = row.querySelector(".field-select");
+    const operatorSelect = row.querySelector(".operator-select");
+
+    const selected = fieldSelect.options[fieldSelect.selectedIndex];
+    const type = selected.getAttribute("data-type");
+    const ops = operators[type] || [];
+
+    operatorSelect.innerHTML = "";
+    ops.forEach(op => {
+      const option = document.createElement("option");
+      option.value = op.value;
+      option.textContent = op.label;
+      operatorSelect.appendChild(option);
+    });
+  }
+
+  // Event delegation
+  container.addEventListener("change", (e) => {
+    if (e.target.classList.contains("field-select")) {
+      const row = e.target.closest(".filter-row");
+      updateOperators(row);
+    }
+  });
+
+  container.addEventListener("click", (e) => {
+    if (e.target.closest(".delete-filter")) {
+      e.target.closest(".filter-row").remove();
+    }
+  });
+
+  addBtn.addEventListener("click", () => {
+    const clone = template.content.cloneNode(true);
+    container.appendChild(clone);
+    const newRow = container.lastElementChild;
+    updateOperators(newRow); // cập nhật operator mặc định cho row mới
+  });
+
+  // Init cho row đầu tiên
+  updateOperators(container.querySelector(".filter-row"));
+</script>

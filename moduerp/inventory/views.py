@@ -3,17 +3,61 @@ from rest_framework import viewsets # Create CRUD API
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
+import json
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
 from django.core.paginator import Paginator
 from .models import ProductTemplate
 
-# Add new products
+# Apply domain queery filter
+def apply_domain(queryset, domain):
+    q = Q()
+    for cond in domain:
+        if len(cond) != 3:
+            continue
+
+        field, operator, value = cond
+
+        # Remove unecessary white spaces
+        if isinstance(value, str):
+            value = value.strip()
+
+        if operator == "=":
+            q &= Q(**{field: value})
+        elif operator == "!=":
+            q &= ~Q(**{field: value})
+        elif operator == ">":
+            q &= Q(**{f"{field}__gt": value})
+        elif operator == ">=":
+            q &= Q(**{f"{field}__gte": value})
+        elif operator == "<":
+            q &= Q(**{f"{field}__lt": value})
+        elif operator == "<=":
+            q &= Q(**{f"{field}__lte": value})
+        elif operator == "ilike":
+            q &= Q(**{f"{field}__icontains": value})
+        elif operator == "not ilike":
+            q &= ~Q(**{f"{field}__icontains": value})
+        elif operator == "in":
+            if isinstance(value, list):
+                value = [v.strip() if isinstance(v, str) else v for v in value]
+                q &= Q(**{f"{field}__in": value})
+
+    return queryset.filter(q)
 
 # Get all products
 def product_list(request):
     if request.htmx:
         products_qs = ProductTemplate.objects.filter(is_active=True).order_by('id')   # Query set
     
+        domain_str = request.GET.get("domain")
+        if domain_str:
+            try:
+                domain = json.loads(domain_str)
+                products_qs = apply_domain(products_qs, domain)
+            except Exception as e:
+                print("Domain parse error:", e)
+
         # Get pagination parameters from request
         page = int(request.GET.get("page", 1))
         page_size = int(request.GET.get("page_size", 24))

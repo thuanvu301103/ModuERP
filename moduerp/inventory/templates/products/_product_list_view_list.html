@@ -8,10 +8,11 @@
         <input type="checkbox" id="select-all" class="form-check-input bg-dark border-indigo-5">
       </th>
       <th class="text-start px-3" style="width: 25%;">Name</th>
-      <th class="text-start px-3" style="width: 15%;">Code</th>
+      <th class="text-start px-3" style="width: 10%;">Code</th>
+      <th class="text-start px-3" style="width: 15%;">Type</th>
       <th class="text-start px-3" style="width: 15%;">Category</th>
-      <th class="text-end px-3" style="width: 20%;">List Price</th>
-      <th class="text-end px-3" style="width: 20%;">Standard Price</th>
+      <th class="text-end px-3" style="width: 15%;">List Price</th>
+      <th class="text-end px-3" style="width: 15%;">Standard Price</th>
     </tr>
   </thead>
   <tbody class="table-group-divider">
@@ -22,6 +23,7 @@
       </td>
       <td class="text-start px-3 text-light">{{ p.name }}</td>
       <td class="text-start px-3 text-light">{{ p.default_code|default:"" }}</td>
+      <td class="text-start px-3 text-light">{{ p.product_type }}</td>
       <td class="text-start px-3 text-light">{{ p.category }}</td>
       <td class="text-end px-3 text-light">{{ p.list_price }}</td>
       <td class="text-end px-3 text-light">{{ p.standard_price }}</td>

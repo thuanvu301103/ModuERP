@@ -9,40 +9,6 @@ from .models import ProductTemplate
 @login_required
 # Get all products
 def product_list(request):
-    if request.htmx:
-        products_qs = ProductTemplate.objects.filter(is_active=True).order_by('id')   # Query set
-    
-        domain_str = request.GET.get("domain")
-        if domain_str:
-            try:
-                domain = json.loads(domain_str)
-                products_qs = apply_domain(products_qs, domain)
-            except Exception as e:
-                print("Domain parse error:", e)
-
-        # Get pagination parameters from request
-        page = int(request.GET.get("page", 1))
-        page_size = int(request.GET.get("page_size", 24))
-        view_type = str(request.GET.get("view_type", 'gallery'))
-
-        paginator = Paginator(products_qs, page_size)
-        page_obj = paginator.get_page(page)
-
-        context = {
-            "products": page_obj.object_list,
-            "meta": {
-                "total": paginator.count,
-                "num_pages": paginator.num_pages,
-                "current_page": page_obj.number,
-                "has_next": page_obj.has_next(),
-                "has_previous": page_obj.has_previous(),
-                "next_page_number": page_obj.next_page_number() if page_obj.has_next() else None,
-                "previous_page_number": page_obj.previous_page_number() if page_obj.has_previous() else None,
-            }
-        }
-    
-        return render(request, "products/_product_list_view.html", {"products": context["products"], "meta": context["meta"], "view_type": view_type})
-    print("Render full product list")
     return render(request, "products/product_list.html")
 
 def product_detail(request, pk):
@@ -85,7 +51,7 @@ class ProductTemplateViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     pagination_class = StandardResultsSetPagination
 
-    def apply_domain(queryset, domain):
+    def apply_domain(self, queryset, domain):
         q = Q()
         for cond in domain:
             if len(cond) != 3:

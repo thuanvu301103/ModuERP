@@ -26,7 +26,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 
 
 class ProductTemplateSerializer(serializers.ModelSerializer):
-    variants = ProductVariantSerializer(many=True, read_only=True)
+    category = serializers.SlugRelatedField(slug_field="name", read_only=True)
 
     class Meta:
         model = ProductTemplate

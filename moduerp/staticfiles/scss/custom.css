@@ -9834,4 +9834,64 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important; } }
 
+.placeholder-primary::placeholder {
+  color: #0d6efd !important;
+  opacity: 1 !important; }
+
+.placeholder-secondary::placeholder {
+  color: #6c757d !important;
+  opacity: 1 !important; }
+
+.placeholder-success::placeholder {
+  color: #198754 !important;
+  opacity: 1 !important; }
+
+.placeholder-info::placeholder {
+  color: #0dcaf0 !important;
+  opacity: 1 !important; }
+
+.placeholder-warning::placeholder {
+  color: #ffc107 !important;
+  opacity: 1 !important; }
+
+.placeholder-danger::placeholder {
+  color: #dc3545 !important;
+  opacity: 1 !important; }
+
+.placeholder-light::placeholder {
+  color: #f8f9fa !important;
+  opacity: 1 !important; }
+
+.placeholder-dark::placeholder {
+  color: #212529 !important;
+  opacity: 1 !important; }
+
+.placeholder-pink-5::placeholder {
+  color: #E91E63 !important;
+  opacity: 1 !important; }
+
+.placeholder-indigo-5::placeholder {
+  color: #3F51B5 !important;
+  opacity: 1 !important; }
+
+.placeholder-cyan-5::placeholder {
+  color: #00BCD4 !important;
+  opacity: 1 !important; }
+
+.placeholder-grey-5::placeholder {
+  color: #9E9E9E !important;
+  opacity: 1 !important; }
+
+.placeholder-blue-grey-5::placeholder {
+  color: #607D8B !important;
+  opacity: 1 !important; }
+
+.placeholder-blue-grey-7::placeholder {
+  color: #455A64 !important;
+  opacity: 1 !important; }
+
+.placeholder-blue-grey-9::placeholder {
+  color: #263238 !important;
+  opacity: 1 !important; }
+
 /*# sourceMappingURL=custom.css.map */

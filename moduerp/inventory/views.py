@@ -11,9 +11,10 @@ from .models import ProductTemplate
 def product_list(request):
     return render(request, "products/product_list.html")
 
-def product_detail(request, pk):
-    product = get_object_or_404(ProductTemplate, pk=pk)
-    return render(request, "products/_product_detail.html", {"product": product})
+@login_required
+# Create new product
+def product_new(request):
+    return render(request, "products/product_new.html")
 
 
 # API

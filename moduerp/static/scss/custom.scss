@@ -15,8 +15,15 @@ $custom-colors: (
   "blue-grey-9": #263238,
 );
 
-// Merge với map sẵn có
+// Merge to existed map
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
-// Cuối cùng import toàn bộ Bootstrap
+// Import all Bootstrap
 @import "node_modules/bootstrap/scss/bootstrap";
+
+@each $name, $color in $theme-colors {
+  .placeholder-#{$name}::placeholder {
+    color: $color !important;
+    opacity: 1 !important;
+  }
+}

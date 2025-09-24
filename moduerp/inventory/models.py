@@ -2,21 +2,35 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 
 
-class UnitOfMeasure(models.Model):
-    name = models.CharField(max_length=64)
-    category = models.CharField(max_length=64, default="Unit")
-    ratio = models.FloatField(default=1.0)  # conversion ratio
-    is_default = models.BooleanField(default=False)
+class UoMCategory(models.Model):
+    name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name
-    
-    '''Example:
-        (kg, Weight, 1.0, default = True)
-        (g, Weight, 0.001, default = False, 1kg = 1000g)
-        (unit, Unit, 1.0, default = True)
-        (dozen, Unit, 12.0, default = True)
-    '''
+
+class UnitOfMeasure(models.Model):
+    UOM_TYPES = [
+        ("reference", "Reference Unit"),    # Standard uom
+        ("bigger", "Bigger than Reference"),
+        ("smaller", "Smaller than Reference"),
+    ]
+
+    name = models.CharField(max_length=64, unique=True)
+    category = models.ForeignKey(UoMCategory, on_delete=models.CASCADE, related_name="uoms")
+    uom_type = models.CharField(max_length=16, choices=UOM_TYPES, default="reference")
+    factor = models.FloatField(
+        help_text="Conversion factor relative to the reference unit. "
+                  "E.g., 0.001 for gram if kg is reference."
+    )
+
+    is_default = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.name} ({self.category.name})"
+
+    class Meta:
+        verbose_name = "Unit of Measure"
+        verbose_name_plural = "Units of Measure"
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=128)

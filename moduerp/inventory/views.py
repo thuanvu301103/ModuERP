@@ -6,16 +6,25 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import ProductTemplate
 
+#----- Products -----#
+
 @login_required
-# Get all products
 def product_list(request):
     return render(request, "products/product_list.html")
 
 @login_required
-# Create new product
 def product_new(request):
     return render(request, "products/product_new.html")
 
+#----- Unit of Measure -----#
+
+@login_required
+def uom_list(request):
+    return render(request, "uom/uom_list.html")
+
+@login_required
+def uom_new(request):
+    return render(request, "uom/uom_new.html")
 
 # API
 from rest_framework import viewsets

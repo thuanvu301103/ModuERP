@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Inventory - Products{% endblock %}
+{% block title %}Inventory - Units of Measure{% endblock %}
 
 {% block navbar %}
 {% include "inventory_navbar.html"%}
 {% endblock %}
 
 {% block toolbar %}
-{% include "products/_product_list_toolbar.html"%}
+{% include "uom/_uom_list_toolbar.html"%}
 {% endblock %}
 
 {% block content %}
 <div class="flex-grow-1 overflow-auto w-100" id="product-list-view"></div>
-<script src="{% static 'js/products/load_products_list.js' %}"></script>
+<script src="{% static 'js/products/load_uom_list.js' %}"></script>
 
 <!-- Product card template -->
 <template id="product-card-template">

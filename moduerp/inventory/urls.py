@@ -8,7 +8,7 @@ urlpatterns = [
     # Products 
     path("products/", views.product_list, name="product_list"),
     path("products/new/", views.product_new, name="product_new"),
-    # UoM
-    path("uom/", views.uom_list, name="uom_list"),
-    path("uom/new/", views.uom_new, name="uom_new")
+    # UoM Catgories
+    path("uom-categories/", views.uom_categories_list, name="uom_category_list"),
+    path("uom-categories/new/", views.uom_categories_new, name="uom_category_new")
 ]

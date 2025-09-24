@@ -19,12 +19,12 @@ def product_new(request):
 #----- Unit of Measure -----#
 
 @login_required
-def uom_list(request):
-    return render(request, "uom/uom_list.html")
+def uom_categories_list(request):
+    return render(request, "uom/uomCategory_list.html")
 
 @login_required
-def uom_new(request):
-    return render(request, "uom/uom_new.html")
+def uom_categories_new(request):
+    return render(request, "uom/uomCategory_new.html")
 
 # API
 from rest_framework import viewsets

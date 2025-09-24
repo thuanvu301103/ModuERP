@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inventory - Units of Measure Categories{% endblock %}
+
+{% block navbar %}
+{% include "inventory_navbar.html"%}
+{% endblock %}
+
+{% block toolbar %}
+{% include "uom/_uomCategory_new_toolbar.html"%}
+{% endblock %}
+
+{% block content %}
+<div class="flex-grow-1 overflow-auto m-0 w-100 p-3">
+  <div class="p-3 bg-dark rounded">
+    <!-- UoM Category name -->
+    <div class="row mb-2">
+      <div class="col-12 col-md-2 fw-semibold text-white my-2">
+        Unit of Measure Category: 
+      </div>
+      <div class="col-12 col-md-5 d-flex flex-row gap-2 my-2">
+        <input type="text" 
+          class="form-control form-control-sm border-0 border-bottom border-blue-grey-5 rounded-0 bg-dark text-white fw-light placeholder-blue-grey-5" 
+          placeholder="Enter UoM Category">
+      </div>
+    </div>
+
+    <!-- UoM Table -->
+    <table id="uom-table" class="table-dark table-hover align-middle w-100">
+      <thead class="border-top border-bottom border-white bg-dark" style="position: sticky; top: 0; z-index: 10;">
+        <tr>
+          <th class="text-start p-2" style="width: 35%;">Unit of Measure</th>
+          <th class="text-start p-2" style="width: 20%;">Type</th>
+          <th class="text-end p-2" style="width: 20%;">Ratio</th>
+          <th class="text-center p-2" style="width: 20%;">Default</th>
+          <th class="text-center p-2" style="width: 5%;"></th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+
+    <!-- Add UoM button -->
+    <button id="add-uom-btn" type="button" class="btn btn-indigo-5 btn-sm mt-3">New Unit of Measure</button>
+  </div>
+</div>
+<script src="{% static 'js/uom/add_uom.js' %}"></script>
+{% endblock %}
+

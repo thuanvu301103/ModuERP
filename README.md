@@ -12,7 +12,7 @@ venv\Scripts\activate
 ```
 
 ## Migrate Database
-- Create migartion fils for new app:
+- Create migartion files for new app:
 ```bash
 python manage.py makemigrations new_app
 ```
@@ -25,6 +25,13 @@ python manage.py migrate
 ```bash
 python manage.py seed_inventory
 ```
+
+## Create Superuser
+- Run the following command in terminal:
+```bash
+python manage.py createsuperuser
+```
+- Input information...
 
 ## Start Project
 - Start project:

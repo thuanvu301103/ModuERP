@@ -21,14 +21,14 @@ python manage.py makemigrations new_app
 python manage.py migrate
 ```
 
+## Run seeder
+```bash
+python manage.py seed_inventory
+```
+
 ## Start Project
 - Start project:
 ```bash
 python manage.py runserver
 ```
 - Default URL: ```http://127.0.0.1:8000/```
-
-## Run seeder
-```bash
-python manage.py seed_inventory
-```

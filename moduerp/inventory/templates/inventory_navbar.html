@@ -9,5 +9,16 @@
 {% endblock %}
 
 {% block nav_menu%}
+<div class="d-flex flex-row gap-2">
   <a href="{% url 'inventory:product_list' %}" class="btn btn-dark btn-sm">Products</a>
+  <button class="d-flex align-items-center btn btn-dark btn-sm" id="configDropdown" type="button"
+    data-bs-toggle="dropdown" aria-expanded="false">
+    Configuration
+  </button>
+  <!-- Configuration Menu-->
+  <ul class="dropdown-menu dropdown-menu-end shadow bg-blue-grey-9 text-white border-blue-grey-5" aria-labelledby="configDropdown">
+    <li><a class="dropdown-item fw-light text-white btn bg-blue-grey-3-hover">Unit of Measure</a></li>
+  </ul>
+</div>
+
 {% endblock %}

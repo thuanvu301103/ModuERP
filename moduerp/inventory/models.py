@@ -30,9 +30,9 @@ class ProductCategory(models.Model):
 
 class ProductTemplate(models.Model):
     TYPE_CHOICES = (
-        ("stockable", "Stockable Product"),
-        ("consumable", "Consumable"),
-        ("service", "Service"),
+        ("stockable", "Stockable Product"), # Example: T-shirt
+        ("consumable", "Consumable"),       # Example: Packing box
+        ("service", "Service"),             # Example: Installation service
     )
 
     name = models.CharField(max_length=255)

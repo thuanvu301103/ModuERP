@@ -32,18 +32,22 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
-from .models import UnitOfMeasure, ProductCategory, ProductTemplate, ProductVariant
+from .models import UoMCategory, UnitOfMeasure, ProductCategory, ProductTemplate, ProductVariant
 from .serializers import (
+    UoMCategorySerializer,
     UnitOfMeasureSerializer,
     ProductCategorySerializer,
     ProductTemplateSerializer,
     ProductVariantSerializer,
 )
 
+class UoMCategoryViewSet(viewsets.ModelViewSet):
+    queryset = UoMCategory.objects.all()
+    serializer_class = UoMCategorySerializer
+
 class UnitOfMeasureViewSet(viewsets.ModelViewSet):
     queryset = UnitOfMeasure.objects.all()
     serializer_class = UnitOfMeasureSerializer
-
 
 class ProductCategoryViewSet(viewsets.ModelViewSet):
     queryset = ProductCategory.objects.all()

@@ -6,11 +6,34 @@
 from rest_framework import serializers
 from .models import UoMCategory, UnitOfMeasure, ProductCategory, ProductTemplate, ProductVariant
 
+class UnitOfMeasureSerializer(serializers.ModelSerializer):
+    category = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = UnitOfMeasure
+        fields = "__all__"
+
 
 class UoMCategorySerializer(serializers.ModelSerializer):
+    uoms = UnitOfMeasureSerializer(required=False, many=True)
+
     class Meta:
         model = UoMCategory
-        fields = ["id", "name", "uoms"]
+        fields = "__all__"
+
+    def validate_uoms(self, value):
+        # Must have at least one UoM
+        if not value:
+            raise serializers.ValidationError("At least one UoM must be provided.")
+        # Only one UoM can be of type 'reference'
+        reference_count = sum(1 for u in value if u.get('uom_type') == 'reference')
+        if reference_count != 1:
+            raise serializers.ValidationError("There must be exactly one UoM with type='reference'.")
+        # Only one UoM can have is_default=True
+        default_count = sum(1 for u in value if u.get('is_default'))
+        if default_count != 1:
+            raise serializers.ValidationError("There must be exactly one UoM with is_default=True.")
+        return value
 
     def create(self, validated_data):
         uoms_data = validated_data.pop("uoms", [])
@@ -18,25 +41,7 @@ class UoMCategorySerializer(serializers.ModelSerializer):
         for uom_data in uoms_data:
             UnitOfMeasure.objects.create(category=category, **uom_data)
         return category
-
-class UnitOfMeasureSerializer(serializers.ModelSerializer):
-    # hiển thị cả category_id và category name
-    category = serializers.PrimaryKeyRelatedField(
-        queryset=UoMCategory.objects.all()
-    )
-    category_name = serializers.CharField(source="category.name", read_only=True)
-
-    class Meta:
-        model = UnitOfMeasure
-        fields = [
-            "id",
-            "name",
-            "category",
-            "category_name",
-            "uom_type",
-            "factor",
-            "is_default",
-        ]
+    
 
 class ProductCategorySerializer(serializers.ModelSerializer):
     class Meta:

@@ -20,7 +20,7 @@
         Unit of Measure Category: 
       </div>
       <div class="col-12 col-md-5 d-flex flex-row gap-2 my-2">
-        <input type="text" 
+        <input type="text" id="uom-category-name-input" 
           class="form-control form-control-sm border-0 border-bottom border-blue-grey-5 rounded-0 bg-dark text-white fw-light placeholder-blue-grey-5" 
           placeholder="Enter UoM Category">
       </div>
@@ -38,25 +38,26 @@
         </tr>
       </thead>
       <tbody>
+        <!-- Reference UoM -->
         <tr class="border-bottom border-bottom-1 border-blue-grey-5">
           <td class="text-start p-1">
-            <input type="text" 
+            <input type="text" name="uom-name-input"
                 class="form-control form-control-sm bg-dark text-white fw-light placeholder-blue-grey-5 border-0" 
                 placeholder="Unit of Measure">
           </td>
           <td class="text-start p-1">
-            <select class="form-select form-select-sm bg-dark text-white border-0" disabled>
+            <select name="uom-type-select" class="form-select form-select-sm bg-dark text-white border-0" disabled>
               <option value="reference" selected>Reference Unit</option>
               <option value="bigger">Bigger than Reference</option>
               <option value="smaller">Smaller than Reference</option>
             </select>
           </td>
           <td class="text-end p-1">
-            <input type="number" 
+            <input type="number" name="uom-ratio-input"
                 class="form-control form-control-sm bg-dark text-white placeholder-blue-grey-5 border-0"
                 placeholder="Ratio" style="text-align: right;" value="1.0" readonly>
           </td>
-          <td class="text-center p-1"><input type="checkbox" class="form-check-input bg-dark" checked></td>
+          <td class="text-center p-1"><input name="uom-default-input" type="checkbox" class="form-check-input bg-dark" checked></td>
           <td class="text-center p-1"></td>
         </tr>
       </tbody>
@@ -70,22 +71,22 @@
 <template id="uom-row-template">
       <tr class="border-bottom border-bottom-1 border-blue-grey-5">
         <td class="text-start p-1">
-            <input type="text" 
+            <input type="text" name="uom-name-input" 
                 class="form-control form-control-sm bg-dark text-white fw-light placeholder-blue-grey-5 border-0" 
                 placeholder="Unit of Measure">
         </td>
         <td class="text-start p-1">
-          <select class="form-select form-select-sm bg-dark text-white fw-light border-0">
+          <select name="uom-type-select" class="form-select form-select-sm bg-dark text-white fw-light border-0">
             <option value="bigger">Bigger than Reference</option>
             <option value="smaller">Smaller than Reference</option>
           </select>
         </td>
         <td class="text-end p-1">
-            <input type="number" 
+            <input type="number" name="uom-ratio-input"
                 class="form-control form-control-sm bg-dark text-white fw-light placeholder-blue-grey-5 border-0"
                 placeholder="Ratio" style="text-align: right;">
         </td>
-        <td class="text-center p-1"><input type="checkbox" class="form-check-input bg-dark"></td>
+        <td class="text-center p-1"><input type="checkbox" name="uom-default-input" class="form-check-input bg-dark"></td>
         <td class="text-center p-1">
             <button type="button" class="remove-btn btn btn-pink-5 btn-sm delete-filter">
                 <img src="{% static 'icons/trash.svg' %}" alt="trash" height="20">
@@ -95,5 +96,6 @@
 </template>
 
 <script src="{% static 'js/uom/add_uom.js' %}"></script>
+<script src="{% static 'js/uom/add_uom_category.js' %}"></script>
 {% endblock %}
 

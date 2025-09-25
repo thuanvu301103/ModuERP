@@ -41,7 +41,7 @@ from .serializers import (
     ProductVariantSerializer,
 )
 
-class UoMCategoryViewSet(viewsets.ModelViewSet):
+class UomCategoryViewSet(viewsets.ModelViewSet):
     queryset = UoMCategory.objects.all()
     serializer_class = UoMCategorySerializer
 

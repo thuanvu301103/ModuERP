@@ -1,8 +1,10 @@
 const apiUrl = "/api/inventory/uom-categories/";
 const uomCategoryNameInputElement = document.getElementById("uom-category-name-input");
+const popUpToastTemp = document.getElementById("pop-up-toast");
 
 async function createUomCategoryAPI(uomCategory) {
   try {
+    console.log("Run successfully");
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: { 
@@ -12,11 +14,17 @@ async function createUomCategoryAPI(uomCategory) {
       credentials: "include",
       body: JSON.stringify(uomCategory) // gửi payload JSON
     });
+    
 
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(`HTTP ${response.status}: ${JSON.stringify(errorData)}`);
     }
+
+    const toastEl = popUpToastTemp.content.cloneNode(true);
+    const toast = new bootstrap.Toast(toastEl);
+    toast.show();
+    
 
     const data = await response.json();
     return data;

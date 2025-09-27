@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
-class UoMCategory(models.Model):
+class UomCategory(models.Model):
     name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
@@ -14,8 +14,8 @@ class UnitOfMeasure(models.Model):
         ("smaller", "Smaller than Reference"),
     ]
 
-    name = models.CharField(max_length=64, unique=True)
-    category = models.ForeignKey(UoMCategory, on_delete=models.CASCADE, related_name="uoms")
+    name = models.CharField(max_length=64)
+    category = models.ForeignKey(UomCategory, on_delete=models.CASCADE, related_name="uoms")
     uom_type = models.CharField(max_length=16, choices=UOM_TYPES, default="reference")
     factor = models.FloatField(
         help_text="Conversion factor relative to the reference unit. "

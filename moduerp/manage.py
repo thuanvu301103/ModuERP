@@ -2,10 +2,11 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+import mimetypes
 
 def main():
     """Run administrative tasks."""
+    mimetypes.add_type("application/javascript", ".js", True)
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'moduerp.settings')
     try:
         from django.core.management import execute_from_command_line

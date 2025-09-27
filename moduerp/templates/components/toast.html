@@ -1,0 +1,15 @@
+{% load static %}
+<div class="toast-container position-fixed bottom-0 end-0 w-100 p-2" style="z-index: 1100; display:block !important; inset:auto 0 0 auto;">
+</div>
+<template id="toast">
+  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="30000">
+    <div class="toast-header">
+      <strong class="me-auto">{{ title|default:"Announcement" }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      {{ message }}
+    </div>
+  </div>
+</template>
+<script src="{% static 'js/components/toast.js' %}"></script>

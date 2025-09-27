@@ -1,10 +1,8 @@
 const apiUrl = "/api/inventory/uom-categories/";
 const uomCategoryNameInputElement = document.getElementById("uom-category-name-input");
-const popUpToastTemp = document.getElementById("pop-up-toast");
 
 async function createUomCategoryAPI(uomCategory) {
   try {
-    console.log("Run successfully");
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: { 
@@ -12,25 +10,39 @@ async function createUomCategoryAPI(uomCategory) {
         "X-CSRFToken": csrftoken
       },
       credentials: "include",
-      body: JSON.stringify(uomCategory) // gửi payload JSON
+      body: JSON.stringify(uomCategory)
     });
     
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(`HTTP ${response.status}: ${JSON.stringify(errorData)}`);
+      const messages = Object.entries(errorData)
+        .map(([field, errors]) => errors.map(err => `${field}: ${err}`).join("\n"))
+        .join("\n");
+      throw new Error(messages);
     }
 
-    const toastEl = popUpToastTemp.content.cloneNode(true);
-    const toast = new bootstrap.Toast(toastEl);
-    toast.show();
-    
+    // Show success toast
+    showToast({
+      title: "Success",
+      message: `Units of Measure Category "${uomCategory.name}" created successfully`,
+      type: "success",
+      delay: 5000
+    });
 
-    const data = await response.json();
-    return data;
+    // Reset page
+    resetUomCategory();
+
   } catch (error) {
-    console.error("Error creating UoM Category:", error);
-    throw error; // ném tiếp để caller xử lý
+    //console.error("Error creating UoM Category:", error);
+    // Show Error toast
+    showToast({
+      title: "Error",
+      message: error.message || "Something went wrong while creating category",
+      type: "danger",
+      delay: 5000
+    });
+    throw error;
   }
 }
 

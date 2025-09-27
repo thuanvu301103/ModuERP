@@ -4,7 +4,7 @@
 '''
 
 from rest_framework import serializers
-from .models import UoMCategory, UnitOfMeasure, ProductCategory, ProductTemplate, ProductVariant
+from .models import UomCategory, UnitOfMeasure, ProductCategory, ProductTemplate, ProductVariant
 
 class UnitOfMeasureSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -18,7 +18,7 @@ class UoMCategorySerializer(serializers.ModelSerializer):
     uoms = UnitOfMeasureSerializer(required=False, many=True)
 
     class Meta:
-        model = UoMCategory
+        model = UomCategory
         fields = "__all__"
 
     def validate_uoms(self, value):
@@ -37,7 +37,7 @@ class UoMCategorySerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         uoms_data = validated_data.pop("uoms", [])
-        category = UoMCategory.objects.create(**validated_data)
+        category = UomCategory.objects.create(**validated_data)
         for uom_data in uoms_data:
             UnitOfMeasure.objects.create(category=category, **uom_data)
         return category

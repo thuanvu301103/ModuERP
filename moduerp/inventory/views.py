@@ -27,9 +27,8 @@ def uom_categories_new(request):
     return render(request, "uom/uomCategory_new.html")
 
 # API
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.response import Response
-from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from .models import UomCategory, UnitOfMeasure, ProductCategory, ProductTemplate, ProductVariant
@@ -86,6 +85,8 @@ class UomCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = UoMCategorySerializer
     permission_classes = [IsAuthenticated]
     pagination_class = StandardResultsSetPagination
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['name']
 
     def get_queryset(self):
         qs = super().get_queryset().order_by('id')

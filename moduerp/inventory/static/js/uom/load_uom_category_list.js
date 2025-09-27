@@ -14,14 +14,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
     const checkedCount = document.getElementById("selected-count");
+    // Filter and Order
     const filterBtn = document.getElementById("filter-btn");
     const filterContainer = document.getElementById("filter-container");
+    const orderBtn = document.getElementById("order-btn");
+    const orderContainer = document.getElementById("order-container");
 
     let currentDomain = null;
+    let currentOrder = null;
 
-    async function fetchData(domain, page = 1) {
+    async function fetchData(domain, order, page = 1) {
         let url = `${apiUrl}?page=${page}`;
         if (domain) url += `&${domain}`;
+        if (order) url += `&${order}`;
         const response = await fetch(url, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -132,9 +137,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         container.appendChild(wrapper);
     }
 
-    async function loadData(domain, page = 1) {
+    async function loadData(domain, order, page = 1) {
         try {
-            const data = await fetchData(domain, page);
+            const data = await fetchData(domain, order, page);
             renderData(data);
         } catch (error) {
             console.error("Fetch error:", error);
@@ -144,12 +149,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Prev/Next
     prevBtn.addEventListener("click", () => {
-        if (!prevBtn.disabled) loadData(currentDomain, parseInt(prevBtn.dataset.page));
+        if (!prevBtn.disabled) loadData(currentDomain, currentOrder, parseInt(prevBtn.dataset.page));
         updateCheckedCount(null);
     });
 
     nextBtn.addEventListener("click", () => {
-        if (!nextBtn.disabled) loadData(currentDomain, parseInt(nextBtn.dataset.page));
+        if (!nextBtn.disabled) loadData(currentDomain, currentOrder, parseInt(nextBtn.dataset.page));
         updateCheckedCount(null);
     });
 
@@ -168,18 +173,41 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                 });
 
-                // Encode domain to JSON string
-                let params = new URLSearchParams();
-                params.append("domain", JSON.stringify(domain));
-                currentDomain = params.toString();
+            // Encode domain to JSON string
+            let params = new URLSearchParams();
+            params.append("domain", JSON.stringify(domain));
+            currentDomain = params.toString();
                 
-                loadData(currentDomain, 1);
+            loadData(currentDomain, currentOrder, 1);
         } else {
             currentDomain = null;
-            loadData(currentDomain, 1);
+            loadData(currentDomain, currentOrder, 1);
+        }
+    });
+
+    orderBtn.addEventListener("click", () => {
+        if (orderBtn.classList.contains("active")) {
+            let orderArr = [];
+
+            orderContainer.querySelectorAll(".order-row").forEach(row => {
+                let field = row.querySelector('[name="field"]').value;
+                let value = row.querySelector('[name="order"]').value;
+                const expr = value === "desc" ? `-${field}` : field;
+                orderArr.push(expr);
+            });
+            // Encode order to JSON string
+            const params = new URLSearchParams();
+            if (orderArr.length) {
+                params.append("ordering", orderArr.join(","));
+            }
+            currentOrder = params.toString();
+            loadData(currentDomain, currentOrder, 1);
+        } else {
+            currentOrder = null;
+            loadData(currentDomain, currentOrder, 1);
         }
     });
     
-    loadData(currentDomain, 1);
+    loadData(currentDomain, currentOrder, 1);
 });
 

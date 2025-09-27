@@ -17,8 +17,8 @@ async function createUomCategoryAPI(uomCategory) {
     if (!response.ok) {
       const errorData = await response.json();
       const messages = Object.entries(errorData)
-        .map(([field, errors]) => errors.map(err => `${field}: ${err}`).join("\n"))
-        .join("\n");
+        .map(([field, errors]) => errors.map(err => `${field}: ${err}`).join("<br>"))
+        .join("<br>");
       throw new Error(messages);
     }
 
@@ -34,7 +34,6 @@ async function createUomCategoryAPI(uomCategory) {
     resetUomCategory();
 
   } catch (error) {
-    //console.error("Error creating UoM Category:", error);
     // Show Error toast
     showToast({
       title: "Error",
@@ -42,7 +41,6 @@ async function createUomCategoryAPI(uomCategory) {
       type: "danger",
       delay: 5000
     });
-    throw error;
   }
 }
 

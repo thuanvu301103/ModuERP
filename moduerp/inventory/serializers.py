@@ -22,17 +22,29 @@ class UoMCategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def validate_uoms(self, value):
+        errors = []
         # Must have at least one UoM
         if not value:
-            raise serializers.ValidationError("At least one UoM must be provided.")
+            errors.append("At least one UoM must be provided")
+            raise serializers.ValidationError(errors)
         # Only one UoM can be of type 'reference'
         reference_count = sum(1 for u in value if u.get('uom_type') == 'reference')
         if reference_count != 1:
-            raise serializers.ValidationError("There must be exactly one UoM with type='reference'.")
+            errors.append("There must be exactly one UoM with type='reference'")
         # Only one UoM can have is_default=True
         default_count = sum(1 for u in value if u.get('is_default'))
         if default_count != 1:
-            raise serializers.ValidationError("There must be exactly one UoM with is_default=True.")
+            errors.append("There must be exactly one UoM with is_default=True")
+        # Check duplicate names within the same category
+        names = [u.get('name') for u in value if u.get('name')]
+        duplicates = [n for n in set(names) if names.count(n) > 1]
+        if duplicates:
+            errors.append(
+                f"Duplicate UoM names are not allowed in the same category: {', '.join(duplicates)}"
+            )
+        
+        if errors:
+            raise serializers.ValidationError(errors)
         return value
 
     def create(self, validated_data):

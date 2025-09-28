@@ -10,5 +10,6 @@ urlpatterns = [
     path("products/new/", views.product_new, name="product_new"),
     # UoM Catgories
     path("uom-categories/", views.uom_categories_list, name="uom_category_list"),
-    path("uom-categories/new/", views.uom_categories_new, name="uom_category_new")
+    path("uom-categories/new/", views.uom_categories_new, name="uom_category_new"),
+    path("uom-categories/<id>/", views.uom_categories_detail, name="uom_category_detail")
 ]

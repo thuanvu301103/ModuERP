@@ -100,14 +100,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             const uomListEl = clone.querySelector(".uom-list");
             uomListEl.innerHTML = "";
             sortedUoms.forEach(uom => {
-            const badge = document.createElement("span");
-            badge.classList.add("badge", "me-1");
-            badge.textContent = uom.name;
+                const badge = document.createElement("span");
+                badge.classList.add("badge", "me-1");
+                badge.textContent = uom.name;
 
-            if (uom.is_default) badge.classList.add("bg-success");
-            else badge.classList.add("bg-indigo-5");
+                if (uom.is_default) badge.classList.add("bg-success");
+                else badge.classList.add("bg-indigo-5");
 
-            uomListEl.appendChild(badge);
+                uomListEl.appendChild(badge);
+            });
+
+            const tr = clone.querySelector('tr');
+            tr.addEventListener('click', (e) => {
+                console.log("click row");
+                // Avoid trigger when click on input
+                if (e.target.tagName.toLowerCase() !== 'input') {
+                    const currentPath = window.location.pathname;
+                    const basePath = currentPath.endsWith('/') ? currentPath : currentPath + '/';
+                    window.location.href = `${basePath}${p.id}/`;
+                }
             });
 
             tbody.appendChild(clone);

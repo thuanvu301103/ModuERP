@@ -2,7 +2,7 @@
 - Transform data in Model → JSON (return client through API).
 - Validate & transform JSON → Model (when client send request POST/PUT/PATCH).
 '''
-
+from django.db import transaction
 from rest_framework import serializers
 from .models import UomCategory, UnitOfMeasure, ProductCategory, ProductTemplate, ProductVariant
 
@@ -47,12 +47,43 @@ class UoMCategorySerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(errors)
         return value
 
+    @transaction.atomic
     def create(self, validated_data):
         uoms_data = validated_data.pop("uoms", [])
         category = UomCategory.objects.create(**validated_data)
         for uom_data in uoms_data:
             UnitOfMeasure.objects.create(category=category, **uom_data)
         return category
+    
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        uoms_data = validated_data.pop("uoms", None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        if uoms_data is not None:
+            existing_uoms = {uom.id: uom for uom in instance.uoms.all()}
+
+            for uom_data in uoms_data:
+                uom_id = uom_data.get("id", None)
+
+                if uom_id and uom_id in existing_uoms:
+                    uom_instance = existing_uoms[uom_id]
+                    for attr, value in uom_data.items():
+                        setattr(uom_instance, attr, value)
+                    uom_instance.save()
+                else:
+                    UnitOfMeasure.objects.create(category=instance, **uom_data)
+
+            payload_ids = [u.get("id") for u in uoms_data if "id" in u]
+            for uom_id, uom_instance in existing_uoms.items():
+                if uom_id not in payload_ids:
+                    uom_instance.delete()
+
+        return instance
+
     
 
 class ProductCategorySerializer(serializers.ModelSerializer):

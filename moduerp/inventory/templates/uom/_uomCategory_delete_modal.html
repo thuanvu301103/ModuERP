@@ -1,0 +1,30 @@
+{% load static %}
+
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 50%;">
+    <div class="modal-content bg-dark text-white border-secondary">
+      
+      <!-- Header -->
+      <div class="modal-header border-secondary">
+        <div class="modal-title fs-5 fw-bold">Delete Warning</div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      
+      <!-- Body -->
+      <div class="modal-body">
+        <div id="filter-container">
+          <p class="m-0 fw-light">You are about to <span class="fw-bold">permanently delete</span> this UoM Category</p>
+          <p class="m-0 fw-light">This action <span class="fw-bold">cannot be undone</span></p>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-pink-5 btn-sm text-white" id="delete-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/uom/delete_uom_category.js' %}"></script>

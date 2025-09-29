@@ -246,7 +246,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const saveBtn = document.getElementById("save-btn");
     saveBtn.addEventListener("click", async () => {
-        console.log("save Button clicked");
         const data = await putData(categoryId, currentData);
         oldData = data;
         currentData = data;

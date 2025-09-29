@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inventory - Units of Measure Categories{% endblock %}
+
+{% block navbar %}
+{% include "inventory_navbar.html"%}
+{% endblock %}
+
+{% block toolbar %}
+{% include "uom/_uomCategory_list_toolbar.html"%}
+{% endblock %}
+
+{% block content %}
+<div class="flex-grow-1 overflow-auto w-100" id="product-list-view"></div>
+<script src="{% static 'js/uom/load_uom_category_list.js' %}"></script>
+
+<!-- Uom Category list template -->
+<template id="uom-category-row-template">
+  <tr>
+    <td class="text-center">
+      <input type="checkbox" class="select-item form-check-input bg-dark border-indigo-5">
+    </td>
+    <td class="text-start px-3 text-light uom-category-name"></td>
+    <td class="text-start px-3 text-light uom-list"></td>
+  </tr>
+</template>
+
+<!-- Filter Model -->
+{% include "uom/_uomCategory_list_modal_filter.html"%}
+<!-- Order Model -->
+{% include "uom/_uomCategory_list_modal_order.html"%}
+{% endblock %}
+
+
+  <!-- Loading indicator -->
+  <div class="d-flex flex-row justify-content-center align-items-center h-100 gap-3">
+    <img src="{% static 'icons/rocket.svg' %}" alt="inventory icon" width="200" height="200">
+    <span class="fs-4 text-white">Loading, please wait...</span>
+    <div class="spinner-border text-indigo-5" role="status" style="width: 2rem; height: 2rem;"></div>
+  </div>
+

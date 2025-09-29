@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}ModuERP - Login{% endblock %}
+
+{% block content %}
+  <!-- Login box-->
+  <div class="card border-1 bg-dark p-3" style="width:400px;">
+    <!-- Logo banner -->
+    <div class="card-body text-center border-bottom">
+      <img alt="Logo" src="{% static 'images/logo banner.svg' %}" height="35">
+    </div>
+    <!-- Login form -->
+    <form role="form" method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}"> 
+      <!-- Login error -->
+      {% if form.errors %}
+        <div class="alert alert-danger my-3">
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <!-- Email -->
+      <div class="my-3">
+        <label for="username" class="form-label text-white">Username</label>
+        <input type="text" placeholder="Enter your username" name="username" id="username" class="form-control" required="required" autocomplete="email">
+      </div>
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label text-white">Password</label>
+        <input type="password" placeholder="Enter your password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" maxlength="4096">
+      </div>
+      <!-- Submit button -->
+      <div class="text-center d-grid mb-3 pt-3">
+        <button type="submit" class="btn btn-indigo-5">Login</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

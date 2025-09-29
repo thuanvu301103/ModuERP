@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inventory - Units of Measure{% endblock %}
+
+{% block navbar %}
+{% include "inventory_navbar.html"%}
+{% endblock %}
+
+{% block toolbar %}
+{% include "uom/_uom_new_toolbar.html"%}
+{% endblock %}
+
+{% block content %}
+<div class="flex-grow-1 overflow-auto m-0 w-100">
+  <div class="row m-0 g-2">
+    <!--Right card -->
+    <div class="col-12 col-md-8 order-2 order-md-1 p-2">
+      <div class="p-3 bg-dark rounded">
+        
+        <!-- Tab navigation -->
+        <ul class="nav nav-tabs mb-3 border-indigo-5" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active bg-indigo-5 text-white fw-light" id="tab1-info" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab">
+              General Information
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link bg-indigo-5 text-white fw-light" id="tab2-vary" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab">
+              Variants
+            </button>
+          </li>
+        </ul>
+
+        <!-- Tab content -->
+        <div class="tab-content text-white" id="myTabContent">
+          <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+            {%include 'products/_product_info.html'%}
+          </div>
+          <div class="tab-pane fade" id="tab2" role="tabpanel">
+            Nội dung Tab 2
+          </div>
+          <div class="tab-pane fade" id="tab3" role="tabpanel">
+            Nội dung Tab 3
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Left card -->
+    <div class="col-12 col-md-4 order-1 order-md-2 p-2">
+      <div class="bg-dark text-white rounded row m-0">
+        <div class="col-4 col-md-12 p-2 text-center">
+          <div class="position-relative">
+            <!-- Image -->
+            <img id="preview-img" 
+              src="{% static 'icons/image.svg' %}"
+              alt="product image" 
+              class="img-fluid rounded w-75"
+            >
+            <!-- Edit button -->
+            <button type="button" id="edit-btn"
+              class="btn btn-sm btn-blue-grey-5 m-2 position-absolute top-0 end-0 rounded-circle">
+              <i class="bi bi-pencil"></i>
+            </button>
+          </div>
+        </div>
+        <!-- Information-->
+        <div class="col-8 col-md-12 p-3 d-flex flex-column gap-2">
+          <!-- Name -->
+          <input type="text" 
+            class="form-control border-0 border-bottom border-blue-grey-5 rounded-0 bg-dark text-white fs-2 fw-bold placeholder-blue-grey-5" 
+            placeholder="Enter product name">
+          <!-- Code -->
+          <div class="row align-items-center">
+            <div class="col-3 text-white">
+              <label for="product-name" class="col-form-label fw-semibold">Code:</label>
+            </div>
+            <div class="col-9">
+              <input type="text" 
+                class="form-control form-control-sm border-0 border-bottom border-blue-grey-5 rounded-0 bg-dark text-white fw-light placeholder-blue-grey-5" 
+                placeholder="Enter product code">
+            </div>
+          </div>
+          <!-- Description -->
+          <div class="row align-items-center">
+            <div class="col-3 text-white">
+              <label for="product-description" class="col-form-label fw-semibold">Description: </label>
+            </div>
+            <div class="col-9">
+              <textarea id="product-description"
+                class="form-control form-control-sm border-0 border-bottom border-blue-grey-5 rounded-0 bg-dark text-white fw-light placeholder-blue-grey-5" 
+                placeholder="Enter product description" 
+                rows="3"></textarea>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

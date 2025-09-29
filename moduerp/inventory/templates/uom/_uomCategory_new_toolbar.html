@@ -1,0 +1,20 @@
+{% extends "layout/toolbar.html" %}
+{% load static %}
+
+{% block toolbar_title%}
+<div name="title" class="fs-5 text-white d-flex align-items-center gap-2">
+  <button type="button" class="btn btn-sm text-white"
+          onclick="window.history.back()">
+    <i class="bi bi-chevron-left"></i>
+  </button>
+  New Units of Measure Category
+</div>
+{%endblock%}
+
+{% block toolbar_actions %} 
+<div class="d-flex flex-row align-items-center gap-2">
+
+  <!-- Add New button -->
+  <button type="button" class="btn btn-indigo-5 btn-sm" id="save-btn">Save</button>
+</div>
+{% endblock %}

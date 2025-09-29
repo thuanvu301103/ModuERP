@@ -1,0 +1,30 @@
+{% load static %}
+
+<nav class="d-flex flex-row align-items-center justify-content-between bg-dark px-3 py-2 gap-2 w-100">
+    <div class="d-flex flex-row align-items-center gap-2">
+        <!-- Header title -->
+        {%block nav_title%} {%endblock%}
+        <!-- Navigator menus -->
+        {%block nav_menu%} {%endblock%}
+    </div>
+    <!-- User Action -->
+    <button class="nav-link d-flex align-items-center" id="userDropdown" type="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="{% static 'images/avatar.svg' %}" 
+            alt="Avatar" width="30" height="30" class="rounded-2 border">
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow bg-blue-grey-9 text-white border-blue-grey-5" aria-labelledby="userDropdown">
+        <li class="px-3 py-1">
+            <strong>{{ user.username }}</strong><br>
+            <small class="text-grey-5">{{ user.email }}</small>
+        </li>
+        <li><hr class="dropdown-divider bg-blue-grey-5"></li>
+        <li><hr class="dropdown-divider bg-blue-grey-5"></li>
+        <li>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="dropdown-item text-white btn-sm bg-blue-grey-3-hover" type="submit">Logout</button>
+            </form>
+        </li>
+    </ul>
+</nav>

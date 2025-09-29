@@ -1,0 +1,7 @@
+django
+djangorestframework
+django-sass-processor
+django-htmx
+psycopg2
+Pillow
+whitenoise

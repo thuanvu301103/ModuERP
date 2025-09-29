@@ -6,6 +6,7 @@ app_name = "inventory"
 # URL patterns
 urlpatterns = [
     # Products 
+    path("product-categories/", views.product_categories_list, name="product_category_list"),
     path("products/", views.product_list, name="product_list"),
     path("products/new/", views.product_new, name="product_new"),
     # UoM Catgories

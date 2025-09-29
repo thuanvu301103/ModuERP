@@ -9,6 +9,10 @@ from .models import ProductTemplate
 #----- Products -----#
 
 @login_required
+def product_categories_list(request):
+    return render(request, "products/productCategory_list.html")
+
+@login_required
 def product_list(request):
     return render(request, "products/product_list.html")
 

@@ -59,6 +59,53 @@ async function fetchData(id) {
     return data;
 }
 
+async function putData(id, updateData) {
+    const api = `/api/inventory/uom-categories/${id}/`;
+    const response = await fetch(api, {
+        method: "PUT",
+        headers: { 
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken 
+        },
+        credentials: "include",
+        body: JSON.stringify(updateData)
+    });
+    if (!response.ok) {
+        showToast({
+            title: "Error",
+            message: error.message || "Something went wrong while creating category",
+            type: "danger",
+            delay: 5000
+        });
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    showToast({
+      title: "Success",
+      message: `Units of Measure Category "${data.name}" updated successfully`,
+      type: "success",
+      delay: 5000
+    });
+    return data;
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
 let oldData = null;
 let currentData = null;
 
@@ -194,6 +241,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         oldData = sortUom(data);
         currentData = sortUom(data);
         itemTitleEle.innerHTML = oldData.name;
+        renderUI(currentData);
+    });
+
+    const saveBtn = document.getElementById("save-btn");
+    saveBtn.addEventListener("click", async () => {
+        console.log("save Button clicked");
+        const data = await putData(categoryId, currentData);
+        oldData = data;
+        currentData = data;
+        itemTitleEle.innerHTML = currentData.name;
         renderUI(currentData);
     });
 });

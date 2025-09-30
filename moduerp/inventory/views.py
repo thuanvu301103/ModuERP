@@ -39,14 +39,17 @@ from rest_framework import viewsets, filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
-from .models import UomCategory, UnitOfMeasure, ProductCategory, ProductTemplate, ProductVariant
+from .models import (
+    UomCategory, UnitOfMeasure, 
+    ProductCategory, ProductCategoryClosure, ProductTemplate, ProductVariant
+)
 from .serializers import (
-    UoMCategorySerializer,
-    UnitOfMeasureSerializer,
-    ProductCategorySerializer,
+    UoMCategorySerializer, UnitOfMeasureSerializer,
+    ProductCategorySerializer, ProductCategoryClosureSerializer,
     ProductTemplateSerializer,
     ProductVariantSerializer,
 )
+from django.contrib.postgres.aggregates import StringAgg
 
 def apply_domain(queryset, domain):
     q = Q()
@@ -88,6 +91,66 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size_query_param = "page_size"  # allow client to override
     max_page_size = 100         # maximum page size
 
+#----- Products -----#
+class ProductCategoryViewSet(viewsets.ModelViewSet):
+    queryset = ProductCategory.objects.all()
+    serializer_class = ProductCategorySerializer
+    permission_classes = [IsAuthenticated]
+
+class ProductCategoryClosureViewSet(viewsets.ModelViewSet):
+    queryset = ProductCategoryClosure.objects.all()
+    serializer_class = ProductCategoryClosureSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['name']
+
+    def get_queryset(self):
+        qs = super().get_queryset().order_by('id')
+        domain_str = self.request.query_params.get("domain")
+        if domain_str:
+            try:
+                domain = json.loads(domain_str)
+                qs = apply_domain(qs, domain)
+            except Exception as e:
+                print("Domain parse error:", e)
+        return qs
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+
+            response_data = {
+                "meta": {
+                    "total": self.paginator.page.paginator.count,
+                    "num_pages": self.paginator.page.paginator.num_pages,
+                    "current_page": self.paginator.page.number,
+                    "has_next": self.paginator.page.has_next(),
+                    "has_previous": self.paginator.page.has_previous(),
+                    "next_page_number": self.paginator.page.next_page_number() if self.paginator.page.has_next() else None,
+                    "previous_page_number": self.paginator.page.previous_page_number() if self.paginator.page.has_previous() else None,
+                },
+                "results": serializer.data
+            }
+            return Response(response_data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            "meta": {
+                "total": len(queryset),
+                "num_pages": 1,
+                "current_page": 1,
+                "has_next": False,
+                "has_previous": False,
+                "next_page_number": None,
+                "previous_page_number": None
+            },
+            "results": serializer.data
+        })
+
+#----- Unit of Measure -----#
 class UomCategoryViewSet(viewsets.ModelViewSet):
     queryset = UomCategory.objects.all()
     serializer_class = UoMCategorySerializer
@@ -145,10 +208,6 @@ class UomCategoryViewSet(viewsets.ModelViewSet):
 class UnitOfMeasureViewSet(viewsets.ModelViewSet):
     queryset = UnitOfMeasure.objects.all()
     serializer_class = UnitOfMeasureSerializer
-
-class ProductCategoryViewSet(viewsets.ModelViewSet):
-    queryset = ProductCategory.objects.all()
-    serializer_class = ProductCategorySerializer
 
 class ProductTemplateViewSet(viewsets.ModelViewSet):
     queryset = ProductTemplate.objects.prefetch_related("variants").all()

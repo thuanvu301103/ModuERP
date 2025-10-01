@@ -1,6 +1,6 @@
 import { getUomCategoryList } from "../api/get_uom_category_list.js";
-import { renderUomCategoryListToolbar, registerUomCategoryListToolbarEvent } from "../components/uom_category_list_toolbar.js";
-import { renderUomCategoryListView } from '../components/uom_category_list_view.js';
+import { renderUomCategoryListToolbar, registerUomCategoryListToolbarEvent, setUomCategoryListToolbarValue } from "../components/uom_category_list_toolbar.js";
+import { renderUomCategoryListView, registerUomCategoryListViewEvent, getUomCategoryListViewValue } from '../components/uom_category_list_view.js';
 
 async function load(domain, order, page) {
     try {
@@ -17,15 +17,31 @@ async function render(data) {
 }
 
 async function registerEvent(currentDomain, currentOrder) {
-    registerUomCategoryListToolbarEvent("previous page", async (prevPage) => {
+    await registerUomCategoryListToolbarEvent("previous page", async (prevPage) => {
         const data = await load(currentDomain, currentOrder, prevPage);
         render(data);
         updateCheckedCount(null);
     });
-    registerUomCategoryListToolbarEvent("next page", async (nextPage) => {
+    await registerUomCategoryListToolbarEvent("next page", async (nextPage) => {
         const data = await load(currentDomain, currentOrder, nextPage);
         render(data);
         updateCheckedCount(null);
+    });
+
+    await registerUomCategoryListViewEvent("on select", async () => {
+        const count = await getUomCategoryListViewValue("count select");
+        setUomCategoryListToolbarValue("count select", count);
+    });
+
+    await registerUomCategoryListToolbarEvent("filter", async () => {
+        const data = await load(currentDomain, currentOrder, 1);
+        await render(data);
+        console.log("Set count to 0");
+        await setUomCategoryListToolbarValue("count select", 0);
+        await registerUomCategoryListViewEvent("on select", async () => {
+            const count = await getUomCategoryListViewValue("count select");
+            await setUomCategoryListToolbarValue("count select", count);
+        });
     });
 }
 
@@ -34,26 +50,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let currentDomain = null;
     let currentOrder = null;
-    let currentPage = 1;
 
     const data = await load(null, null, 1);
     render(data);
-    registerEvent(currentDomain, currentOrder);
+    console.log("Call register");
+    await registerEvent(currentDomain, currentOrder);
     
-    const checkedCount = document.getElementById("selected-count");
     // Filter and Order
     const filterBtn = document.getElementById("filter-btn");
     const filterContainer = document.getElementById("filter-container");
     const orderBtn = document.getElementById("order-btn");
     const orderContainer = document.getElementById("order-container");
 
-
-    function updateCheckedCount(itemCheckboxes) {
-        let count = 0
-        if (!itemCheckboxes) count = 0;
-        else count = [...itemCheckboxes].filter(cb => cb.checked).length;
-        checkedCount.textContent = count;
-    }
 
     filterBtn.addEventListener("click", async () => {
         if (filterBtn.classList.contains("active")) {

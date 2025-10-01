@@ -1,4 +1,4 @@
-
+document.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("filter-container");
   const template = document.getElementById("filter-template");
   const addBtn = document.getElementById("add-filter");
@@ -65,3 +65,4 @@
     const newRow = container.lastElementChild;
     updateOperators(newRow);
   });
+});

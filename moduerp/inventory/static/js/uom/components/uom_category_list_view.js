@@ -44,16 +44,41 @@ export async function renderUomCategoryListView(data) {
     const itemCheckboxes = table.querySelectorAll(".select-item");
     
     if (selectAll) {
+        selectAll.checked = false;
         selectAll.addEventListener("change", function () {
             itemCheckboxes.forEach(cb => cb.checked = this.checked);
-            //updateCheckedCount(itemCheckboxes);
         });
     }
     itemCheckboxes.forEach(cb => {
+        cb.checked = false;
         cb.addEventListener("change", function () {
             if (!this.checked) selectAll.checked = false;
             else if ([...itemCheckboxes].every(cb => cb.checked)) selectAll.checked = true;
-            //updateCheckedCount(itemCheckboxes);
         });
     });
+}
+
+export async function registerUomCategoryListViewEvent(eventName, eventFunction) {
+    if (eventName == "on select") {
+        const table = document.getElementById("uom-category-list-view");
+        const selectAll = table.querySelector("#select-all");
+        const itemCheckboxes = table.querySelectorAll(".select-item");
+    
+        if (selectAll) selectAll.addEventListener("change", eventFunction);
+        
+        itemCheckboxes.forEach(cb => {
+            cb.addEventListener("change", eventFunction);
+        });
+    }
+}
+
+export async function getUomCategoryListViewValue(name) {
+    if (name == "count select") {
+        const table = document.getElementById("uom-category-list-view");
+        const itemCheckboxes = table.querySelectorAll(".select-item");
+        let count = 0
+        if (!itemCheckboxes) count = 0;
+        else count = [...itemCheckboxes].filter(cb => cb.checked).length;
+        return count
+    }
 }

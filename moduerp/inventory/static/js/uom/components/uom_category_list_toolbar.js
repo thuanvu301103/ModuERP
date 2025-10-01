@@ -32,5 +32,16 @@ export async function registerUomCategoryListToolbarEvent(eventName, eventFuncti
         nextBtn.addEventListener("click", () => {
             if (!nextBtn.disabled) eventFunction(parseInt(nextBtn.dataset.page));
         });
+    } else if (eventName == "filter") {
+        const filterBtn = document.getElementById("filter-btn");
+        filterBtn.addEventListener("click", () => {eventFunction;});
+    }
+}
+
+export async function setUomCategoryListToolbarValue(name, value) {
+    if (name == "count select") {
+        console.log("Set count value: ", value);
+        const checkedCount = document.getElementById("selected-count");
+        checkedCount.textContent = value;
     }
 }

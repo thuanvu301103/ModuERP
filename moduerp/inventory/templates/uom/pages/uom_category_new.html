@@ -3,6 +3,10 @@
 
 {% block title %}Inventory - Units of Measure Categories{% endblock %}
 
+{% block script %} 
+<script type="module" src="{% static 'js/uom/pages/uom_category_new.js' %}"></script>
+{% endblock %}
+
 {% block navbar %}
 {% include "inventory_navbar.html"%}
 {% endblock %}
@@ -98,7 +102,6 @@
 {% include "components/toast.html"%}
 
 <script src="{% static 'js/uom/reset_uom_category.js'%}"></script>
-<script src="{% static 'js/uom/add_uom.js' %}"></script>
 <script src="{% static 'js/uom/add_uom_category.js' %}"></script>
 {% endblock %}
 

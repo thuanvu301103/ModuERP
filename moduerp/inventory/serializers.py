@@ -11,7 +11,9 @@ from .models import (
 
 #----- Products -----#
 class ProductCategorySerializer(serializers.ModelSerializer):
+    category_id = serializers.IntegerField(allow_null=False, read_only=True)  
     parent_id = serializers.IntegerField(required=False, allow_null=True)
+    path = serializers.CharField(read_only=True)
 
     class Meta:
         model = ProductCategory
@@ -48,9 +50,6 @@ class ProductCategorySerializer(serializers.ModelSerializer):
         return category
 
 class ProductCategoryClosureSerializer(serializers.ModelSerializer):
-    descendant = ProductCategorySerializer(required=False)
-    ancestor = ProductCategorySerializer(required=False)
-
     class Meta:
         model = ProductCategoryClosure
         fields = "__all__"

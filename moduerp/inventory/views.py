@@ -49,6 +49,7 @@ from .serializers import (
     ProductTemplateSerializer,
     ProductVariantSerializer,
 )
+from django.db.models import Count, Max, F, Subquery, OuterRef
 from django.contrib.postgres.aggregates import StringAgg
 
 def apply_domain(queryset, domain):
@@ -96,17 +97,33 @@ class ProductCategoryViewSet(viewsets.ModelViewSet):
     queryset = ProductCategory.objects.all()
     serializer_class = ProductCategorySerializer
     permission_classes = [IsAuthenticated]
-
-class ProductCategoryClosureViewSet(viewsets.ModelViewSet):
-    queryset = ProductCategoryClosure.objects.all()
-    serializer_class = ProductCategoryClosureSerializer
-    permission_classes = [IsAuthenticated]
     pagination_class = StandardResultsSetPagination
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['name']
 
     def get_queryset(self):
-        qs = super().get_queryset().order_by('id')
+        # Sub query to get direct parent
+        parent_subquery = ProductCategoryClosure.objects.filter(
+            descendant=OuterRef('descendant'),
+            depth=1
+        ).order_by('depth')
+        qs = (
+            ProductCategoryClosure.objects.annotate(
+                category_id=F('descendant__id'),
+                name=F('descendant__name'),
+            )
+            .values('category_id', 'name')
+            .annotate(
+                path=StringAgg(
+                    F('ancestor__name'),
+                    delimiter=' / ',
+                    ordering='-depth'
+                ),
+                parent_id=Subquery(parent_subquery.values('ancestor_id')[:1])                
+            )
+            .order_by('name')
+        )
+
         domain_str = self.request.query_params.get("domain")
         if domain_str:
             try:

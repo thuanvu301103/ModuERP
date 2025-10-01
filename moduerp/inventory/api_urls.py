@@ -8,7 +8,6 @@ router = routers.DefaultRouter()
 router.register(r'uom-categories', views.UomCategoryViewSet)
 router.register(r'uom', views.UnitOfMeasureViewSet)
 router.register(r'product-categories', views.ProductCategoryViewSet)
-router.register(r'product-categories-hierarchy', views.ProductCategoryClosureViewSet)
 router.register(r'products', views.ProductTemplateViewSet)
 router.register(r'variants', views.ProductVariantViewSet)
 

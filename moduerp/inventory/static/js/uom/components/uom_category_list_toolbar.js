@@ -19,6 +19,9 @@ export async function renderUomCategoryListToolbar(data) {
 
     const totalElement = document.getElementById("toolbar-total");
     totalElement.textContent = data.total || "0";
+
+    const checkedCount = document.getElementById("selected-count");
+    checkedCount.textContent = 0;
 }
 
 export async function registerUomCategoryListToolbarEvent(eventName, eventFunction) {
@@ -34,14 +37,26 @@ export async function registerUomCategoryListToolbarEvent(eventName, eventFuncti
         });
     } else if (eventName == "filter") {
         const filterBtn = document.getElementById("filter-btn");
-        filterBtn.addEventListener("click", () => {eventFunction;});
+        filterBtn.addEventListener("click", async () => await eventFunction());
+    } else if (eventName == "order") {
+        const orderBtn = document.getElementById("order-btn");
+        orderBtn.addEventListener("click", async () => await eventFunction());
     }
 }
 
 export async function setUomCategoryListToolbarValue(name, value) {
     if (name == "count select") {
-        console.log("Set count value: ", value);
         const checkedCount = document.getElementById("selected-count");
         checkedCount.textContent = value;
+    }
+}
+
+export async function getUomCategoryListToolbarValue(name) {
+    if (name == "is filter active") {
+        const filterBtn = document.getElementById("filter-btn");
+        return filterBtn.classList.contains("active")
+    } else if (name == "is order active") {
+        const orderBtn = document.getElementById("order-btn");
+        return orderBtn.classList.contains("active")
     }
 }

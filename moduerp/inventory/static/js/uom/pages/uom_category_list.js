@@ -1,6 +1,12 @@
 import { getUomCategoryList } from "../api/get_uom_category_list.js";
-import { renderUomCategoryListToolbar, registerUomCategoryListToolbarEvent, setUomCategoryListToolbarValue } from "../components/uom_category_list_toolbar.js";
+import { 
+    renderUomCategoryListToolbar, registerUomCategoryListToolbarEvent, 
+    setUomCategoryListToolbarValue, getUomCategoryListToolbarValue,
+} from "../components/uom_category_list_toolbar.js";
 import { renderUomCategoryListView, registerUomCategoryListViewEvent, getUomCategoryListViewValue } from '../components/uom_category_list_view.js';
+import { getUomCategoryListModalFilterValue } from '../components/uom_category_list_modal_filter.js';
+import { getUomCategoryListModalOrderValue } from '../components/uom_category_list_modal_order.js';
+
 
 async function load(domain, order, page) {
     try {
@@ -16,16 +22,22 @@ async function render(data) {
     renderUomCategoryListView(data.results);
 }
 
-async function registerEvent(currentDomain, currentOrder) {
+async function registerEvent(state) {
     await registerUomCategoryListToolbarEvent("previous page", async (prevPage) => {
-        const data = await load(currentDomain, currentOrder, prevPage);
+        const data = await load(state.currentDomain, state.currentOrder, prevPage);
         render(data);
-        updateCheckedCount(null);
+        await registerUomCategoryListViewEvent("on select", async () => {
+            const count = await getUomCategoryListViewValue("count select");
+            await setUomCategoryListToolbarValue("count select", count);
+        });
     });
     await registerUomCategoryListToolbarEvent("next page", async (nextPage) => {
-        const data = await load(currentDomain, currentOrder, nextPage);
+        const data = await load(state.currentDomain, state.currentOrder, nextPage);
         render(data);
-        updateCheckedCount(null);
+        await registerUomCategoryListViewEvent("on select", async () => {
+            const count = await getUomCategoryListViewValue("count select");
+            await setUomCategoryListToolbarValue("count select", count);
+        });
     });
 
     await registerUomCategoryListViewEvent("on select", async () => {
@@ -34,10 +46,29 @@ async function registerEvent(currentDomain, currentOrder) {
     });
 
     await registerUomCategoryListToolbarEvent("filter", async () => {
-        const data = await load(currentDomain, currentOrder, 1);
+        if (await getUomCategoryListToolbarValue("is filter active")) {
+            state.currentDomain = await getUomCategoryListModalFilterValue("domain");
+        } else {
+            state.currentDomain = null;
+        }
+
+        const data = await load(state.currentDomain, state.currentOrder, 1);
         await render(data);
-        console.log("Set count to 0");
-        await setUomCategoryListToolbarValue("count select", 0);
+        await registerUomCategoryListViewEvent("on select", async () => {
+            const count = await getUomCategoryListViewValue("count select");
+            await setUomCategoryListToolbarValue("count select", count);
+        });
+    });
+
+    await registerUomCategoryListToolbarEvent("order", async () => {
+        if (await getUomCategoryListToolbarValue("is order active")) {
+            state.currentOrder = await getUomCategoryListModalOrderValue("ordering");
+        } else {
+            state.currentOrder = null;
+        }
+
+        const data = await load(state.currentDomain, state.currentOrder, 1);
+        await render(data);
         await registerUomCategoryListViewEvent("on select", async () => {
             const count = await getUomCategoryListViewValue("count select");
             await setUomCategoryListToolbarValue("count select", count);
@@ -48,70 +79,12 @@ async function registerEvent(currentDomain, currentOrder) {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    let currentDomain = null;
-    let currentOrder = null;
+    let state = {
+        currentDomain: null,
+        currentOrder: null
+    }
 
     const data = await load(null, null, 1);
-    render(data);
-    console.log("Call register");
-    await registerEvent(currentDomain, currentOrder);
-    
-    // Filter and Order
-    const filterBtn = document.getElementById("filter-btn");
-    const filterContainer = document.getElementById("filter-container");
-    const orderBtn = document.getElementById("order-btn");
-    const orderContainer = document.getElementById("order-container");
-
-
-    filterBtn.addEventListener("click", async () => {
-        if (filterBtn.classList.contains("active")) {
-            let domain = [];
-
-            filterContainer.querySelectorAll(".filter-row").forEach(row => {
-                let field = row.querySelector('[name="field"]').value;
-                let operator = row.querySelector('[name="operator"]').value;
-                let value = row.querySelector('[name="value"]').value;
-
-                if (value) {
-                    domain.push([field, operator, isNaN(value) ? value : Number(value)]);
-                    }
-                });
-
-            // Encode domain to JSON string
-            let params = new URLSearchParams();
-            params.append("domain", JSON.stringify(domain));
-            currentDomain = params.toString();
-            const data = await load(currentDomain, currentOrder, 1);
-            render(data);
-        } else {
-            currentDomain = null;
-            const data = await load(currentDomain, currentOrder, 1);
-            render(data);
-        }
-    });
-
-    orderBtn.addEventListener("click", async () => {
-        if (orderBtn.classList.contains("active")) {
-            let orderArr = [];
-
-            orderContainer.querySelectorAll(".order-row").forEach(row => {
-                let field = row.querySelector('[name="field"]').value;
-                let value = row.querySelector('[name="order"]').value;
-                const expr = value === "desc" ? `-${field}` : field;
-                orderArr.push(expr);
-            });
-            // Encode order to JSON string
-            const params = new URLSearchParams();
-            if (orderArr.length) {
-                params.append("ordering", orderArr.join(","));
-            }
-            currentOrder = params.toString();
-            const data = await load(currentDomain, currentOrder, 1);
-            render(data);
-        } else {
-            currentOrder = null;
-            const data = await load(currentDomain, currentOrder, 1);
-            render(data);
-        }
-    });
+    await render(data);
+    await registerEvent(state);
 });

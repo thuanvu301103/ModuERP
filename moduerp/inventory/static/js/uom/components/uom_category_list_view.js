@@ -17,7 +17,7 @@ export async function renderUomCategoryListView(data) {
         uomListEl.innerHTML = "";
         sortedUoms.forEach(uom => {
             const badge = document.createElement("span");
-            badge.classList.add("badge", "me-1");
+            badge.classList.add("badge", "me-1", "fw-light");
             badge.textContent = uom.name;
 
             if (uom.is_default) badge.classList.add("bg-success");

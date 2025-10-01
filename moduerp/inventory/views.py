@@ -24,7 +24,7 @@ def product_new(request):
 
 @login_required
 def uom_categories_new(request):
-    return render(request, "uom/uomCategory_new.html")
+    return render(request, "uom/pages/uom_category_new.html")
 
 @login_required
 def uom_categories_list(request):

@@ -28,7 +28,7 @@ def uom_categories_new(request):
 
 @login_required
 def uom_categories_list(request):
-    return render(request, "uom/uomCategory_list.html")
+    return render(request, "uom/pages/uom_category_list.html")
 
 @login_required
 def uom_categories_detail(request, id):
@@ -88,7 +88,7 @@ def apply_domain(queryset, domain):
     return queryset.filter(q)
 
 class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 24              # default page size
+    page_size = 25              # default page size
     page_size_query_param = "page_size"  # allow client to override
     max_page_size = 100         # maximum page size
 

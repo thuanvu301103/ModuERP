@@ -1,5 +1,5 @@
-export async function get_list(domain, order, page = 1) {
-    const apiUrl = "/api/inventory/product-categories/";
+export async function getUomCategoryList(domain, order, page = 1) {
+    const apiUrl = "/api/inventory/uom-categories/";
     let url = `${apiUrl}?page=${page}`;
         if (domain) url += `&${domain}`;
         if (order) url += `&${order}`;

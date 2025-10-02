@@ -35,7 +35,6 @@ export async function renderUomCategoryDetailView(data) {
     tableBody.addEventListener("change", (e) => {
         if (e.target.type === "checkbox") {
             tableBody.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-                console.log(cb)
                 if (cb !== e.target) cb.checked = false;
             });
         }
@@ -66,16 +65,55 @@ export async function renderUomCategoryDetailView(data) {
     });
 }
 
-export async function registerUomCategoryListViewEvent(eventName, eventFunction) {
-    if (eventName == "on select") {
-        const table = document.getElementById("uom-category-list-view");
-        const selectAll = table.querySelector("#select-all");
-        const itemCheckboxes = table.querySelectorAll(".select-item");
-    
-        if (selectAll) selectAll.addEventListener("change", eventFunction);
-        
-        itemCheckboxes.forEach(cb => {
-            cb.addEventListener("change", eventFunction);
+export async function registerUomCategoryDetailViewEvent(eventName, eventFunction) {
+    if (eventName == "on change") {
+        const table = document.getElementById("uom-category-detail-view");
+        ["change", "select", "click"].forEach(evt => {
+            table.addEventListener(evt, async (event) => {
+                if (evt === "click") {
+                    if (event.target.closest(".btn")?.classList.contains("btn")) {
+                        await eventFunction(event);
+                    }
+                } else {
+                    await eventFunction(event);
+                }
+            });
         });
+    }
+}
+
+export async function getUomCategoryDetailViewValue(name) {
+    if (name == "data") {
+        const uomCategoryNameInputElement = document.getElementById("uom-category-name-input");
+        const uomCategoryName = uomCategoryNameInputElement.value;
+        if (!uomCategoryName) {
+            uomCategoryNameInputElement.focus();
+            return null;
+        }
+
+        // Check if all field in uom table have been filled
+        const tableBody = document.querySelector("#uom-table tbody");
+        const rows = tableBody.querySelectorAll("tr");
+        for (const row of rows) {
+            const inputs = row.querySelectorAll("input[type='text'], input[type='number']");
+            for (const input of inputs) {
+                if (!input.value.trim()) {
+                    input.focus();
+                    return null;
+                }
+            }
+        }
+  
+        // Get uoms
+        const uoms = [];
+        rows.forEach(row => {
+            const name = row.querySelector('input[name="uom-name-input"]').value.trim();
+            const uom_type = row.querySelector('select[name="uom-type-select"]').value;
+            const factor = parseFloat(row.querySelector('input[name="uom-ratio-input"]').value);
+            const is_default = row.querySelector('input[name="uom-default-input"]').checked;
+
+            uoms.push({name, uom_type, factor, is_default});
+        });
+        return {"name": uomCategoryName.trim(), "uoms": uoms};
     }
 }

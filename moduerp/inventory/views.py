@@ -32,7 +32,7 @@ def uom_categories_list(request):
 
 @login_required
 def uom_categories_detail(request, id):
-    return render(request, "uom/uomCategory_detail.html")
+    return render(request, "uom/pages/uom_category_detail.html")
 
 # API
 from rest_framework import viewsets, filters

@@ -192,9 +192,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     oldData = sortUom(data);
     currentData = sortUom(data);
 
-    // Render UI
-    const itemTitleEle = document.getElementById("item-title");
-    itemTitleEle.innerHTML = oldData.name;
     renderUI(currentData);
 
     const tableBody = document.querySelector("#uom-table tbody");

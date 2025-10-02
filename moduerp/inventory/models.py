@@ -33,13 +33,17 @@ class UnitOfMeasure(models.Model):
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=128)
-    parent = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name
-    
-    '''Example: Vegetables, Electronics, Clothes
-    '''
+
+class ProductCategoryClosure(models.Model):
+    ancestor = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name="ancestor")
+    descendant = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name="descendant")
+    depth = models.IntegerField()
+
+    class Meta:
+        unique_together = ("ancestor", "descendant")
 
 class ProductTemplate(models.Model):
     TYPE_CHOICES = (

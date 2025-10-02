@@ -4,15 +4,63 @@
 '''
 from django.db import transaction
 from rest_framework import serializers
-from .models import UomCategory, UnitOfMeasure, ProductCategory, ProductTemplate, ProductVariant
+from .models import (
+    ProductCategory, ProductCategoryClosure,
+    UomCategory, UnitOfMeasure, ProductTemplate, ProductVariant
+)
 
+#----- Products -----#
+class ProductCategorySerializer(serializers.ModelSerializer):
+    category_id = serializers.IntegerField(allow_null=False, read_only=True)  
+    parent_id = serializers.IntegerField(required=False, allow_null=True)
+    path = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = ProductCategory
+        fields = "__all__"
+
+    def validate_parent_id(self, value):
+        if value is None:
+            return value    # Root node
+        errors = []
+        try:
+            parent = ProductCategory.objects.get(pk=value)
+        except ProductCategory.DoesNotExist:
+            errors.append(f"Parent category with id {value} does not exist.")
+        if errors:
+            raise serializers.ValidationError(errors)  
+        return value
+
+    @transaction.atomic
+    def create(self, validated_data):
+        parent_id = validated_data.pop("parent_id", None)
+        category = ProductCategory.objects.create(**validated_data)
+        # Point to itself
+        ProductCategoryClosure.objects.create(ancestor=category, descendant=category, depth=0)
+        # Point to all its ancestors
+        if parent_id:
+            parent = ProductCategory.objects.get(pk=parent_id)
+            parent_ancestors = ProductCategoryClosure.objects.filter(descendant=parent)
+            for path in parent_ancestors:
+                ProductCategoryClosure.objects.create(
+                    ancestor=path.ancestor,
+                    descendant=category,
+                    depth=path.depth + 1
+                )
+        return category
+
+class ProductCategoryClosureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductCategoryClosure
+        fields = "__all__"
+
+#----- Unit of Measure -----#
 class UnitOfMeasureSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = UnitOfMeasure
         fields = "__all__"
-
 
 class UoMCategorySerializer(serializers.ModelSerializer):
     uoms = UnitOfMeasureSerializer(required=False, many=True)
@@ -86,10 +134,7 @@ class UoMCategorySerializer(serializers.ModelSerializer):
 
     
 
-class ProductCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductCategory
-        fields = "__all__"
+
 
 
 class ProductVariantSerializer(serializers.ModelSerializer):

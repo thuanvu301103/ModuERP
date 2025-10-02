@@ -1,22 +1,22 @@
 {% load static %}
 
-<div class="modal fade" id="orderModal" tabindex="-1">
+<div class="modal fade" id="filterModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 80%;">
     <div class="modal-content bg-dark text-white border-secondary">
       
       <!-- Header -->
       <div class="modal-header border-secondary">
-        <div class="modal-title fs-5 fw-bold">Advance Order</div>
+        <div class="modal-title fs-5 fw-bold">Advance Filter</div>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       
       <!-- Body -->
       <div class="modal-body">
-        <div id="order-container">
+        <div id="filter-container">
         </div>
 
-        <button type="button" class="btn btn-cyan-5 btn-sm mt-2" id="add-order">
-          Add more order
+        <button type="button" class="btn btn-cyan-5 btn-sm mt-2" id="add-filter">
+          Add more filter
         </button>
       </div>
       
@@ -30,19 +30,17 @@
 </div>
 
 <!-- Template -->
-<template id="order-template">
-  <div class="order-row d-flex gap-2 mb-2">
+<template id="filter-template">
+  <div class="filter-row d-flex gap-2 mb-2">
     <select name="field" class="form-select field-select bg-dark text-white fw-light border-secondary">
       <option value="name" data-type="string">Name</option>
     </select>
-    <select name="order" class="form-select field-select bg-dark text-white fw-light border-secondary">
-      <option value="asc" data-type="string">Ascending</option>
-      <option value="desc" data-type="string">Descending</option>
-    </select>
-    <button type="button" class="btn btn-pink-5 btn-sm delete-order">
+    <select name="operator" class="form-select operator-select bg-dark text-white fw-light border-secondary"></select>
+    <input type="text" name="value" class="form-control bg-dark text-white fw-light border-secondary">
+    <button type="button" class="btn btn-pink-5 btn-sm delete-filter">
       <img src="{% static 'icons/trash.svg' %}" alt="trash" height="20">
     </button>
   </div>
 </template>
 
-<script src="{% static 'js/uom/order_uom_category_list.js' %}"></script>
+<script type="module" src="{% static 'js/uom/components/uom_category_list_modal_filter.js' %}"></script>

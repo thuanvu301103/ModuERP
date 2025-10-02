@@ -1,17 +1,5 @@
-{% extends "base.html" %}
 {% load static %}
 
-{% block title %}Inventory - Units of Measure Categories{% endblock %}
-
-{% block navbar %}
-{% include "inventory_navbar.html"%}
-{% endblock %}
-
-{% block toolbar %}
-{% include "uom/_uomCategory_detail_toolbar.html"%}
-{% endblock %}
-
-{% block content %}
 <div class="flex-grow-1 overflow-auto m-0 w-100 h-100 p-3">
   <div class="p-3 bg-dark rounded">
     <!-- UoM Category name -->
@@ -39,7 +27,7 @@
       </thead>
       <tbody>
         <!-- Reference UoM -->
-        <tr class="border-bottom border-bottom-1 border-blue-grey-5" id="reference-uom">
+        <tr class="border-bottom border-bottom-1 border-blue-grey-5">
           <td class="text-start p-1">
             <input type="text" name="uom-name-input"
                 class="form-control form-control-sm bg-dark text-white fw-light placeholder-blue-grey-5 border-0" 
@@ -69,35 +57,30 @@
 </div>
 
 <template id="uom-row-template">
-  <tr class="border-bottom border-bottom-1 border-blue-grey-5">
-    <td class="text-start p-1">
-      <input type="text" name="uom-name-input" 
-        class="form-control form-control-sm bg-dark text-white fw-light placeholder-blue-grey-5 border-0" 
-        placeholder="Unit of Measure">
-    </td>
-    <td class="text-start p-1">
-      <select name="uom-type-select" class="form-select form-select-sm bg-dark text-white fw-light border-0">
-        <option value="bigger">Bigger than Reference</option>
-        <option value="smaller">Smaller than Reference</option>
-      </select>
-    </td>
-    <td class="text-end p-1">
-      <input type="number" name="uom-ratio-input"
-        class="form-control form-control-sm bg-dark text-white fw-light placeholder-blue-grey-5 border-0"
-        placeholder="Ratio" style="text-align: right;">
-    </td>
-    <td class="text-center p-1"><input type="checkbox" name="uom-default-input" class="form-check-input bg-dark"></td>
-    <td class="text-center p-1">
-      <button type="button" class="remove-btn btn btn-pink-5 btn-sm delete-filter">
-        <img src="{% static 'icons/trash.svg' %}" alt="trash" height="20">
-      </button>
-    </td>
-  </tr>
+      <tr class="border-bottom border-bottom-1 border-blue-grey-5">
+        <td class="text-start p-1">
+            <input type="text" name="uom-name-input" 
+                class="form-control form-control-sm bg-dark text-white fw-light placeholder-blue-grey-5 border-0" 
+                placeholder="Unit of Measure">
+        </td>
+        <td class="text-start p-1">
+          <select name="uom-type-select" class="form-select form-select-sm bg-dark text-white fw-light border-0">
+            <option value="bigger">Bigger than Reference</option>
+            <option value="smaller">Smaller than Reference</option>
+          </select>
+        </td>
+        <td class="text-end p-1">
+            <input type="number" name="uom-ratio-input"
+                class="form-control form-control-sm bg-dark text-white fw-light placeholder-blue-grey-5 border-0"
+                placeholder="Ratio" style="text-align: right;">
+        </td>
+        <td class="text-center p-1"><input type="checkbox" name="uom-default-input" class="form-check-input bg-dark"></td>
+        <td class="text-center p-1">
+            <button type="button" class="remove-btn btn btn-pink-5 btn-sm delete-filter">
+                <img src="{% static 'icons/trash.svg' %}" alt="trash" height="20">
+            </button>
+        </td>
+      </tr>
 </template>
 
-{% include "components/toast.html"%}
-{% include "uom/_uomCategory_delete_modal.html"%}
-<script src="{% static 'js/uom/reset_uom_category.js'%}"></script>
-<script src="{% static 'js/uom/load_uom_category.js' %}"></script>
-{% endblock %}
-
+<script type="module" src="{% static 'js/uom/components/uom_category_new_form.js' %}"></script>

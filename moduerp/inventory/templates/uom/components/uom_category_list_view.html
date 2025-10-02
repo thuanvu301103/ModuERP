@@ -1,0 +1,27 @@
+<div class="flex-grow-1 overflow-auto w-100" id="uom-category-list-view">
+  <div style="overflow-y: auto; max-height: 83vh;">
+    <table class="table table-dark table-hover table-striped align-middle">
+      <thead style="position: sticky; top: 0; z-index: 10;">
+        <tr>
+          <th class="text-center" style="width: 5%;">
+            <input type="checkbox" id="select-all" class="form-check-input bg-dark border-indigo-5">
+          </th>
+          <th class="text-start px-3" style="width: 25%;">Name</th>
+          <th class="text-start px-3" style="width: 70%;">Units of Measure</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+      </tbody>
+    </table>
+  <div>
+</div>
+
+<template id="uom-category-row-template">
+  <tr>
+    <td class="text-center">
+      <input type="checkbox" class="select-item form-check-input bg-dark border-indigo-5">
+    </td>
+    <td class="text-start px-3 text-light uom-category-name fw-light"></td>
+    <td class="text-start px-3 text-light uom-list"></td>
+  </tr>
+</template>

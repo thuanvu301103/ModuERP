@@ -1,4 +1,21 @@
-function showToast({ title = "Announcement", message = "", type = "info", delay = 3000 }) {
+function formatErrorMessage(message) {
+    if (typeof message === "string") {
+        return message;
+    }
+    if (typeof message === "object") {
+        return Object.entries(message)
+            .map(([field, msgs]) => {
+                if (Array.isArray(msgs)) {
+                    return `<div><strong>${field}:</strong> ${msgs.join(", ")}</div>`;
+                }
+                return `<div><strong>${field}:</strong> ${msgs}</div>`;
+            })
+            .join("");
+    }
+    return "";
+}
+
+export function showToast({ title = "Announcement", message = "", type = "info", delay = 3000 }) {
     const toastTemp = document.getElementById("toast");
     if (!toastTemp) {
         console.error("Template #toast not found");
@@ -14,7 +31,8 @@ function showToast({ title = "Announcement", message = "", type = "info", delay 
     }
 
     toastEl.querySelector('.toast-header strong').textContent = title;
-    toastEl.querySelector('.toast-body').textContent = message;
+    const formattedMessage = formatErrorMessage(message);
+    toastEl.querySelector('.toast-body').innerHTML = formattedMessage;
     toastEl.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
     toastEl.classList.add(`bg-${type}`);
     toastEl.setAttribute('data-bs-delay', delay);

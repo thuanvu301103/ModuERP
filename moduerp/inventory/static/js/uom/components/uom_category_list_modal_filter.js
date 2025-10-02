@@ -1,4 +1,4 @@
-
+document.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("filter-container");
   const template = document.getElementById("filter-template");
   const addBtn = document.getElementById("add-filter");
@@ -65,3 +65,23 @@
     const newRow = container.lastElementChild;
     updateOperators(newRow);
   });
+});
+
+export async function getUomCategoryListModalFilterValue(name) {
+  if (name == "domain") {
+    let domain = [];
+    const filterContainer = document.getElementById("filter-container");
+    filterContainer.querySelectorAll(".filter-row").forEach(row => {
+      let field = row.querySelector('[name="field"]').value;
+      let operator = row.querySelector('[name="operator"]').value;
+      let value = row.querySelector('[name="value"]').value;
+
+      if (value) domain.push([field, operator, isNaN(value) ? value : Number(value)]);              
+    });
+
+    // Encode domain to JSON string
+    let params = new URLSearchParams();
+    params.append("domain", JSON.stringify(domain));
+    return params.toString();
+  }
+}

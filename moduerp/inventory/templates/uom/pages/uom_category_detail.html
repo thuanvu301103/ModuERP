@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inventory - Units of Measure Categories{% endblock %}
+
+{% block script %} 
+<script type="module" src="{% static 'js/uom/pages/uom_category_detail.js' %}"></script>
+{% endblock %}
+
+{% block navbar %}
+{% include "inventory_navbar.html"%}
+{% endblock %}
+
+{% block toolbar %}
+{% include "uom/components/uom_category_detail_toolbar.html"%}
+{% endblock %}
+
+{% block content %}
+{% include "uom/components/uom_category_detail_view.html"%}
+{% include "components/toast.html"%}
+{% include "uom/components/uom_category_detail_modal_delete.html"%}
+{% endblock %}
+
